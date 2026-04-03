@@ -1,6 +1,7 @@
 const asyncHandler = require("../../utils/asyncHandler");
+const { generateOTP } = require("../../utils/generateOTP");
 const { signToken, createAuthResponse } = require("../../utils/jwt");
-const { register, login } = require("./auth.service");
+const { register, login, verifyEmail, resendOtp } = require("./auth.service");
 
 /** POST /api/auth/register */
 const registerHandler = asyncHandler(async (req, res) => {
@@ -24,4 +25,22 @@ const logoutHandler = asyncHandler(async (req, res) => {
   res.json({ success: true, message: "Logged out successfully." });
 });
 
-module.exports = { registerHandler, loginHandler, logoutHandler };
+/** POST /api/auth/verify-email */
+const verifyHandler = asyncHandler(async (req, res) => {
+  const { otp, email } = req.body;
+  console.log("otp", otp);
+  const user = await verifyEmail({ otp, email });
+  res.json({ success: true, data: createAuthResponse(user) });
+});
+const resendOtpHandler = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  await resendOtp({ email });
+  res.json({ success: true, message: "OTP resent successfully." });
+});
+module.exports = {
+  resendOtpHandler,
+  registerHandler,
+  loginHandler,
+  logoutHandler,
+  verifyHandler,
+};
