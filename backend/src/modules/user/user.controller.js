@@ -3,7 +3,7 @@ const { getUserById, updateProfile } = require('./user.service');
 
 /** GET /api/users/me */
 const getMe = asyncHandler(async (req, res) => {
-  const user = await getUserById(req.user.id);
+  const user = await getUserById(req.user._id);
   res.json({ success: true, data: user });
 });
 

@@ -3,8 +3,8 @@ const jwt = require("jsonwebtoken");
 /**
  * Sign a JWT token for a given user id.
  */
-const signToken = (id, res) => {
-  const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (id, isVerified, res) => {
+  const token = jwt.sign({ id, isVerified }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || "7d",
   });
   return res.cookie("token", token, {
@@ -30,6 +30,7 @@ const createAuthResponse = (user) => ({
     name: user.name,
     email: user.email,
     role: user.role,
+    isVerified: user.isVerified,
     createdAt: user.createdAt,
   },
 });

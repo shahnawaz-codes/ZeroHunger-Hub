@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { authService } from "@/modules/auth/auth.service";
+import { userService } from "@/modules/user/user.service";
 
 export const useAuth = () => {
   const router = useRouter();
@@ -14,7 +15,7 @@ export const useAuth = () => {
   const redirect = searchParams.get("redirect") || "/dashboard";
   const fetchUser = useCallback(async () => {
     try {
-      const { user } = await authService.getMe();
+      const user = await userService.getMe();
       setUserData(user);
     } catch (error) {
       console.log(error);
