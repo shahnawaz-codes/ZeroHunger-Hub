@@ -16,8 +16,6 @@ router.post("/login", loginHandler);
 router.post("/logout", logoutHandler);
 router.post("/verify-email", verifyHandler); // Endpoint for email verification
 router.post("/resend-otp", resendOtpHandler);
-router.get("/me", protect, (req, res) => {
-  res.json({ user: req.user });
-});
+
 
 module.exports = router;

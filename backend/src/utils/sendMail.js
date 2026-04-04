@@ -1,11 +1,11 @@
 const { transporter } = require("../config/nodemailer");
-const sendEmail = async (email, subject, text) => {
+const sendEmail = async (email, subject, html) => {
   try {
     const info = await transporter.sendMail({
       from: process.env.SMTP_USER, // SAME as auth.user ✅
       to: email,
-      subject: subject,
-      text: text,
+      subject,
+      html,
     });
     console.log("Message sent:", info.messageId);
 

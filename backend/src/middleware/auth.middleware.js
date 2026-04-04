@@ -16,8 +16,23 @@ const protect = asyncHandler(async (req, res, next) => {
   const user = await User.findById(decoded.id).select("-password");
   console.log("User found:", user); // ← and this
 
-  if (!user) throw new AppError("User no longer exists.", 401);
+  if (!user) {
+    res.clearCookie("token"); // Clear invalid token
+    throw new AppError("User no longer exists.", 401);
+  }
   req.user = user;
+  next();
+});
+/**
+ * Middleware to ensure the user has a verified email before accessing certain routes.
+ */
+const requireVerified = asyncHandler(async (req, res, next) => {
+  if (!req.user.isVerified) {
+    throw new AppError(
+      "Please verify your email to access this resource.",
+      403,
+    );
+  }
   next();
 });
 /**
@@ -33,4 +48,4 @@ const restrictTo =
     next();
   };
 
-module.exports = { protect, restrictTo };
+module.exports = { protect, requireVerified, restrictTo };

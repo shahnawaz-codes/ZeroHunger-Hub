@@ -2,6 +2,7 @@ const User = require("../user/user.model");
 const AppError = require("../../utils/AppError");
 const sendEmail = require("../../utils/sendMail");
 const { generateOTP } = require("../../utils/generateOTP");
+const { getVerificationEmailHTML } = require("../../utils/Emailtemplate ");
 
 /**
  * Register a new user and return a signed token.
@@ -16,13 +17,13 @@ const register = async ({ name, email, password }) => {
     email,
     password,
     otp,
-    otpExpires: Date.now() + 5 * 60 * 1000,
+    otpExpires: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now,
   }); // OTP valid for 5 minutes
 
   await sendEmail(
     email,
-    "Verify your email",
-    `Your verification code is: ${otp}`,
+    "Your ZeroHunger verification code 🍱",
+    getVerificationEmailHTML(otp),
   );
 
   return user;
@@ -40,12 +41,24 @@ const login = async ({ email, password }) => {
   if (!user || !(await user.comparePassword(password))) {
     throw new AppError("Invalid email or password.", 401);
   }
+  let otp;
+  if (!user.isVerified) {
+    otp = generateOTP();
+    user.otp = otp;
+    user.otpExpires = new Date(Date.now() + 5 * 60 * 1000);
+    await user.save();
+    sendEmail(
+      email,
+      "Your ZeroHunger verification code 🍱",
+      getVerificationEmailHTML(otp),
+    );
+  }
   return user;
 };
 
 /**
  * Verify a user's email using the OTP token.
- * This function is not fully implemented yet, but it will check the OTP and mark the user as verified.
+ * If valid, mark the user as verified and return the user object.
  */
 const verifyEmail = async ({ otp, email }) => {
   const user = await User.findOne({ email });
@@ -76,13 +89,14 @@ const resendOtp = async ({ email }) => {
     throw new AppError("User not found.", 404);
   }
   const otp = generateOTP();
+
+  user.otp = otp;
+  user.otpExpires = new Date(Date.now() + 5 * 60 * 1000);
+  await user.save();
   await sendEmail(
     email,
-    "Verify your email",
-    `resend Your verification code is: ${otp}`,
+    "Your ZeroHunger verification code 🍱 (resend)",
+    getVerificationEmailHTML(otp),
   );
-  user.otp = otp;
-  user.otpExpires = Date.now() + 5 * 60 * 1000;
-  await user.save();
 };
 module.exports = { register, login, verifyEmail, resendOtp };

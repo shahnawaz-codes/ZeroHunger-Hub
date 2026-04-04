@@ -10,7 +10,9 @@ export function proxy(req) {
 
   // Check for token in cookies
   const token = req.cookies.get("token")?.value;
-
+  
+  console.log("token", token);
+  // Redirect to login if no token  and preserve the original path for redirect after login
   if (!token) {
     const loginUrl = req.nextUrl.clone();
     loginUrl.pathname = "/login";
