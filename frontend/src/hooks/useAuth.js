@@ -1,18 +1,16 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { authService } from "@/modules/auth/auth.service";
 import { userService } from "@/modules/user/user.service";
 
 export const useAuth = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  const redirect = searchParams.get("redirect") || "/dashboard";
+  // Fetch user data on mount to check if authenticated
   const fetchUser = useCallback(async () => {
     try {
       const user = await userService.getMe();
@@ -27,38 +25,86 @@ export const useAuth = () => {
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
-
+  
+  /**
+   * Registers a new user and redirects to email verification page on success.
+   */
   const register = useCallback(
-    async (email, name, password) => {
+    async (name, email, password) => {
       try {
-        await authService.register(email, name, password);
-        await fetchUser();
-        router.push(redirect);
+        await authService.register(name, email, password);
+        toast.success(
+          "Registration successful! Check your email for verification code.",
+        );
+        setTimeout(() => {
+          router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+        }, 1000);
       } catch (error) {
-        toast.error(error.message || "Login failed");
+        toast.error(error.message || "Registration failed");
+        throw error;
       }
     },
-    [fetchUser, router, redirect],
+    [router],
   );
+
   const login = useCallback(
-    async (email, password) => {
+    async (email, password, redirect = "/dashboard") => {
       try {
-        await authService.login(email, password);
+        const response = await authService.login(email, password);
+        if (!response.success) {
+          if (
+            response.message &&
+            (response.message.includes("verify") ||
+              response.message.includes("otp"))
+          ) {
+            router.push(
+              `/verify-email?email=${encodeURIComponent(email)}&redirect=${encodeURIComponent(redirect)}`,
+            );
+            return;
+          }
+          throw new Error(response.message);
+        }
         await fetchUser();
         router.push(redirect);
       } catch (error) {
         toast.error(error.message || "Login failed");
+        throw error;
       }
     },
-    [fetchUser, router, redirect],
+    [fetchUser, router],
   );
+
+  const verifyEmail = useCallback(
+    async (otp, email, redirect = "/dashboard") => {
+      try {
+        await authService.verifyEmail(otp, email);
+        await fetchUser();
+        router.push(redirect);
+      } catch (error) {
+        toast.error(error.message || "Verification failed");
+        throw error;
+      }
+    },
+    [fetchUser, router],
+  );
+
+  const resendOtp = useCallback(async (email) => {
+    try {
+      await authService.resendOtp(email);
+      toast.success("OTP resent successfully");
+    } catch (error) {
+      toast.error(error.message || "Failed to resend OTP");
+      throw error;
+    }
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       await authService.logout();
       setUserData(null);
       router.push("/login");
     } catch (error) {
-      toast.error('error.message || "Login failed"');
+      toast.error(error.message || "Logout failed");
     }
   }, [router]);
   return {
@@ -66,6 +112,8 @@ export const useAuth = () => {
     login,
     logout,
     register,
+    verifyEmail,
+    resendOtp,
     isLoading,
     isAuthenticated: !!userData,
   };

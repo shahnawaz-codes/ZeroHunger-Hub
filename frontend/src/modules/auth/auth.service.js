@@ -3,7 +3,7 @@ import api from "@/lib/axios";
 export const authService = {
   async login(email, password) {
     const { data } = await api.post("/auth/login", { email, password });
-    return data.data;
+    return data;
   },
 
   async register(name, email, password) {
@@ -17,6 +17,16 @@ export const authService = {
 
   async logout() {
     const { data } = await api.post("/auth/logout");
+    return data;
+  },
+
+  async verifyEmail(otp, email) {
+    const { data } = await api.post("/auth/verify-email", { otp, email });
+    return data.data;
+  },
+
+  async resendOtp(email) {
+    const { data } = await api.post("/auth/resend-otp", { email });
     return data;
   },
 };

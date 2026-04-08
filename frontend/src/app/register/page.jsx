@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+// zod resolver for react-hook-form + zod schemas
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/hooks/useAuth';
 import { registerSchema } from '@/lib/validations';
@@ -10,24 +10,20 @@ import { AuthCard } from '@/components/AuthCard';
 
 export default function RegisterPage() {
   const { register: signup } = useAuth();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
+    register, // register function to track form inputs
+    handleSubmit, // function to handle form submission
+    formState: { errors,isSubmitting },
   } = useForm({
     resolver: zodResolver(registerSchema),
   });
 
   const onSubmit = async (values) => {
-    setIsSubmitting(true);
     try {
       await signup(values.name, values.email, values.password);
     } catch (err) {
       showToast.error(err?.message || 'Registration failed.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
