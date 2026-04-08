@@ -25,7 +25,7 @@ export const useAuth = () => {
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
-  
+
   /**
    * Registers a new user and redirects to email verification page on success.
    */
@@ -36,6 +36,7 @@ export const useAuth = () => {
         toast.success(
           "Registration successful! Check your email for verification code.",
         );
+        sessionStorage.setItem("pendingVerification", email);
         setTimeout(() => {
           router.push(`/verify-email?email=${encodeURIComponent(email)}`);
         }, 1000);
@@ -57,6 +58,7 @@ export const useAuth = () => {
             (response.message.includes("verify") ||
               response.message.includes("otp"))
           ) {
+            sessionStorage.setItem("pendingVerification", email);
             router.push(
               `/verify-email?email=${encodeURIComponent(email)}&redirect=${encodeURIComponent(redirect)}`,
             );

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 // zod resolver for react-hook-form + zod schemas
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@/hooks/useAuth';
-import { registerSchema } from '@/lib/validations';
-import { Button, Input, showToast } from '@/components/ui';
-import { AuthCard } from '@/components/AuthCard';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/hooks/useAuth";
+import { registerSchema } from "@/lib/validations";
+import { Button, Input, showToast } from "@/components/ui";
+import { AuthCard } from "@/components/AuthCard";
 
 export default function RegisterPage() {
   const { register: signup } = useAuth();
@@ -14,7 +14,7 @@ export default function RegisterPage() {
   const {
     register, // register function to track form inputs
     handleSubmit, // function to handle form submission
-    formState: { errors,isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(registerSchema),
   });
@@ -23,7 +23,7 @@ export default function RegisterPage() {
     try {
       await signup(values.name, values.email, values.password);
     } catch (err) {
-      showToast.error(err?.message || 'Registration failed.');
+      showToast.error(err?.message || "Registration failed.");
     }
   };
 
@@ -42,7 +42,7 @@ export default function RegisterPage() {
           placeholder="Jane Doe"
           autoComplete="name"
           error={errors.name?.message}
-          {...register('name')}
+          {...register("name")}
         />
         <Input
           label="Email"
@@ -50,7 +50,7 @@ export default function RegisterPage() {
           placeholder="you@example.com"
           autoComplete="email"
           error={errors.email?.message}
-          {...register('email')}
+          {...register("email")}
         />
         <Input
           label="Password"
@@ -58,7 +58,7 @@ export default function RegisterPage() {
           placeholder="Min. 6 characters"
           autoComplete="new-password"
           error={errors.password?.message}
-          {...register('password')}
+          {...register("password")}
         />
         <Input
           label="Confirm Password"
@@ -66,7 +66,7 @@ export default function RegisterPage() {
           placeholder="Re-enter your password"
           autoComplete="new-password"
           error={errors.confirmPassword?.message}
-          {...register('confirmPassword')}
+          {...register("confirmPassword")}
         />
         <Button type="submit" fullWidth isLoading={isSubmitting}>
           Create Account

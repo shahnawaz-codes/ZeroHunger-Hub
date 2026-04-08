@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,10 +32,21 @@ function VerifyContent() {
   const {
     register,
     handleSubmit,
-    formState: { errors,isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(verifySchema),
   });
+
+  /**
+   * Check if the email is the same as the one in the session storage to prevent users from accessing this page directly without registering. If there's a mismatch, show an error and redirect to the registration page.
+   */
+  useEffect(() => {
+    const pending = sessionStorage.getItem("pendingVerification");
+    console.log("pending ", pending);
+    if (!pending || pending !== email) {
+      return router.push("/register");
+    }
+  }, []);
 
   useEffect(() => {
     if (timer > 0) {
@@ -62,6 +73,7 @@ function VerifyContent() {
     try {
       await verifyEmail(values.otp, email, redirect);
       showToast.success("Email verified successfully!");
+      sessionStorage.removeItem("pendingVerification");
     } catch (err) {
       // Error already shown in hook
     }
@@ -85,15 +97,7 @@ function VerifyContent() {
   };
 
   if (!email) {
-    return (
-      <AuthCard
-        title="Error"
-        subtitle="No email provided. Please register first."
-        footerText="Go to"
-        footerLinkLabel="Register"
-        footerLinkHref="/register"
-      />
-    );
+    return <div>Loading...</div>; // wait for email from URL
   }
 
   return (

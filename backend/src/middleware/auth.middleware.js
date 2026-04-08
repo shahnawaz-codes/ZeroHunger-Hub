@@ -9,12 +9,9 @@ const User = require("../modules/user/user.model");
 const protect = asyncHandler(async (req, res, next) => {
   const token = req.cookies.token;
   if (!token) throw new AppError("No token found.", 401);
-  console.log("token", token);
   const decoded = verifyToken(token);
-  console.log("Decoded ID from token:", decoded.id); // ← add this
 
   const user = await User.findById(decoded.id).select("-password");
-  console.log("User found:", user); // ← and this
 
   if (!user) {
     res.clearCookie("token"); // Clear invalid token
