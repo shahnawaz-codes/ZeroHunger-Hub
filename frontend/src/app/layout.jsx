@@ -2,8 +2,8 @@ import { Toaster } from 'react-hot-toast';
 import './globals.css';
 
 export const metadata = {
-  title: 'MyApp',
-  description: 'Full-stack Next.js boilerplate',
+  title: 'ZeroHunger',
+  description: 'Food Waste Reduction App',
 };
 
 export default function RootLayout({ children }) {

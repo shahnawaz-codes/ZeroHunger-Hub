@@ -1,32 +1,32 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@/hooks/useAuth';
-import { loginSchema } from '@/lib/validations';
-import { Button, Input, showToast } from '@/components/ui';
-import { AuthCard } from '@/components/AuthCard';
-export default function LoginPage() {
+import { useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/hooks/useAuth";
+import { loginSchema } from "@/lib/validations";
+import { Button, Input, showToast } from "@/components/ui";
+import { AuthCard } from "@/components/AuthCard";
+export const dynamic = "force-dynamic";
+function LoginContent() {
   const { login } = useAuth();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/dashboard";
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = async (values) => {
-    setIsSubmitting(true);
     try {
-      await login(values.email, values.password);
+      await login(values.email, values.password, redirect);
     } catch (err) {
-      showToast.error(err?.message || 'Login failed.');
-    } finally {
-      setIsSubmitting(false);
+      showToast.error(err?.message || "Login failed.");
     }
   };
 
@@ -45,7 +45,7 @@ export default function LoginPage() {
           placeholder="you@example.com"
           autoComplete="email"
           error={errors.email?.message}
-          {...register('email')}
+          {...register("email")}
         />
         <Input
           label="Password"
@@ -53,12 +53,20 @@ export default function LoginPage() {
           placeholder="••••••••"
           autoComplete="current-password"
           error={errors.password?.message}
-          {...register('password')}
+          {...register("password")}
         />
         <Button type="submit" fullWidth isLoading={isSubmitting}>
           Sign In
         </Button>
       </form>
     </AuthCard>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
