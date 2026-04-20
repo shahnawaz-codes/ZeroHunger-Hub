@@ -14,7 +14,7 @@ export function AuthCard({
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block text-2xl font-bold text-primary-600 mb-2">
-            MyApp
+            Zero Hunger
           </Link>
           <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
           <p className="text-sm text-gray-500 mt-1">{subtitle}</p>

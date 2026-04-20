@@ -1,100 +1,124 @@
-"use client";
+'use client';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-import Link from "next/link";
-import { Button } from "@/components/ui/Button";
-import { useState } from "react";
+const navItems = [
+  { href: '/', label: 'Home', icon: HomeIcon },
+  { href: '/search', label: 'Explore', icon: SearchIcon },
+  { href: '/orders', label: 'Orders', icon: BagIcon },
+  { href: '/restaurant', label: 'Restaurant', icon: StoreIcon },
+];
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const navLinks = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-  ];
+  const pathname = usePathname();
+  const isRestaurant = pathname.startsWith('/restaurant');
 
   return (
-    <nav className="bg-primary-600 text-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <>
+      {/* Top Nav */}
+      <header className="sticky top-0 z-50 bg-[#111] border-b border-white/10">
+        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="text-2xl font-bold text-white">🌱</div>
-            <span className="font-bold text-xl">ZeroHunger</span>
+            <span className="text-xl font-display font-black text-white">
+              Zero<span className="text-primary-500">Hunger</span>
+            </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="nav-link">
-                {link.label}
-              </Link>
-            ))}
-          </div>
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navItems.map(({ href, label }) => {
+              const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                    active
+                      ? 'bg-primary-500 text-white'
+                      : 'text-white/60 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </nav>
 
-          {/* CTA Buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            <Button
-              variant="secondary"
-              size="sm"
-              className="text-primary-600 border-white hover:bg-primary-50"
-            >
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button size="sm" className="cta-button">
-              <Link href="/register">Sign Up</Link>
-            </Button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-md hover:bg-primary-700 transition-colors"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-              />
-            </svg>
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden pb-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="nav-link block text-center py-2"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <div className="flex flex-col gap-2 mt-4 px-2">
-              <Button
-                variant="secondary"
-                size="sm"
-                fullWidth
-                className="text-primary-600 border-white"
-              >
-                <Link href="/login">Login</Link>
-              </Button>
-              <Button size="sm" fullWidth className="cta-button">
-                <Link href="/register">Sign Up</Link>
-              </Button>
+          {/* Right actions */}
+          <div className="flex items-center gap-2">
+            <button className="hidden md:flex items-center gap-1.5 text-white/60 hover:text-white text-sm font-medium transition-colors">
+              <span>📍</span>
+              <span>Ahmedabad</span>
+              <ChevronIcon />
+            </button>
+            <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs font-bold">
+              SR
             </div>
           </div>
-        )}
-      </div>
-    </nav>
+        </div>
+      </header>
+
+      {/* Mobile Bottom Nav */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#111] border-t border-white/10 pb-safe">
+        <div className="grid grid-cols-4 h-16">
+          {navItems.map(({ href, label, icon: Icon }) => {
+            const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex flex-col items-center justify-center gap-0.5 transition-colors ${
+                  active ? 'text-primary-500' : 'text-white/40'
+                }`}
+              >
+                <Icon size={active ? 22 : 20} />
+                <span className="text-[10px] font-semibold">{label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+    </>
+  );
+}
+
+/* ---------- Inline SVG Icons ---------- */
+function HomeIcon({ size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+    </svg>
+  );
+}
+function SearchIcon({ size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+      <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+    </svg>
+  );
+}
+function BagIcon({ size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <path d="M16 10a4 4 0 0 1-8 0" />
+    </svg>
+  );
+}
+function StoreIcon({ size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  );
+}
+function ChevronIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
   );
 }

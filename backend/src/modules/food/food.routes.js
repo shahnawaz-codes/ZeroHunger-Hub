@@ -2,17 +2,13 @@ const { Router } = require("express");
 const {
   protect,
   requireVerified,
-  restrictTo,
 } = require("../../middleware/auth.middleware");
-const {
-  allFoodsHandler,
-  createHandler,
-  foodByIdHandler,
-} = require("./food.controller");
+const { allFoodsHandler, foodByIdHandler } = require("./food.controller");
 
-const router = Router(protect, requireVerified);
-// router.use(protect, requireVerified);
+const router = Router();
+router.use(protect, requireVerified);
 
-router.route("/").get(restrictTo("restaurant"), allFoodsHandler).post(createHandler);
-router.get("/:id", foodByIdHandler);
+// this route is for search and filter food items later on
+router.route("/").get(allFoodsHandler);
+router.get("/:foodId", foodByIdHandler);
 module.exports = router;

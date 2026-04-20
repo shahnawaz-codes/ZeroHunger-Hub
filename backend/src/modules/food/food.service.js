@@ -1,29 +1,53 @@
 const AppError = require("../../utils/AppError");
 const Food = require("./food.model");
-const createFood = (data, restaurantId) => {
-  const { name, description, price, quantity, expiryDate } = data;
-  if (!name || !price || !quantity) {
-    throw new AppError(
-      "Name, price, and quantity are required to create a food item.",
-      400,
-    );
-  }
-  const food = Food.create({
+
+const createFood = async (data, restaurantId) => {
+  const {
     name,
     description,
-    price,
-    quantity,
+    pricing, // {original, discounted}
+    expiryDate,
+    category,
+    totalQuantity,
+    pickupSlots, //[{start, end}]
+    expiryTime,
+    tags,
+  } = data;
+  const { original, discount } = pricing;
+  if (discount > original) {
+    throw new AppError("price should be greater than discount ", 400);
+  }
+  const food = await Food.create({
+    name,
+    description,
+    pricing,
+    quantity: {
+      total: totalQuantity,
+    },
     expiryDate,
     restaurant: restaurantId,
+    category,
+    pickupSlots,
+    expiryTime,
+    tags,
   });
   return food;
 };
-const getAllFoods = () => {
-  const food = Food.find().populate("restaurant", "name");
-  return food;
+const Myfoods = async (restaurantId) => {
+  const foods = await Food.find({ restaurant: restaurantId });
+  return foods;
 };
-const getFoodById = (id) => {
-  const food = Food.findById(id).populate("restaurant", "name");
+
+///------------------ public route--------------------
+const getAllFoods = async () => {
+  const foods = await Food.find().populate("restaurant", "name cuisine");
+  return foods;
+};
+const getFoodById = async (foodId) => {
+  const food = await Food.findById(foodId).populate(
+    "restaurant",
+    "name cuisine address",
+  );
   if (!food) {
     throw new AppError("Food item not found.", 404);
   }
@@ -33,4 +57,5 @@ module.exports = {
   createFood,
   getAllFoods,
   getFoodById,
+  Myfoods,
 };
