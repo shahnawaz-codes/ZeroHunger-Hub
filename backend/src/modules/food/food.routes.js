@@ -8,6 +8,7 @@ const { allFoodsHandler, foodByIdHandler } = require("./food.controller");
 const router = Router();
 router.use(protect, requireVerified);
 
+
 // this route is for search and filter food items later on
 router.route("/").get(allFoodsHandler);
 router.get("/:foodId", foodByIdHandler);

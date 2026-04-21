@@ -20,8 +20,8 @@ const handleCreateRestaurant = asyncHandler(async (req, res) => {
  * @access  Private
  */
 const handleMyRestaurant = asyncHandler(async (req, res) => {
-  const restaurant = await myRestaurant(req.user?._id, req?.restaurant._id);
-  res.status(200).json({ restaurant });
+  const restaurant = await myRestaurant(req.user?._id);
+  res.status(200).json({ success: true, data: restaurant });
 });
 
 module.exports = {

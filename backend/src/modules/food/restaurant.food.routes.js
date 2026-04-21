@@ -5,7 +5,10 @@ const {
   restrictTo,
 } = require("../../middleware/auth.middleware");
 const { MyfoodsHandler, createHandler } = require("./food.controller");
-const attachRestaurant = require("../../middleware/restaurant.middleware");
+const {
+  attachRestaurant,
+  requireRestaurant,
+} = require("../../middleware/restaurant.middleware");
 
 const router = Router();
 /**
@@ -16,6 +19,7 @@ router.use(
   requireVerified,
   restrictTo("restaurant"),
   attachRestaurant,
+  requireRestaurant, // check if the user is a restaurant
 );
 
 router.route("/").post(createHandler).get(MyfoodsHandler);

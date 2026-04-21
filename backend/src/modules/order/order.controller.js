@@ -58,7 +58,7 @@ const cancelOrderByUserHandler = asyncHandler(async (req, res) => {
  * @access Private (Restaurant)
  */
 const handleGetRestaurantOrders = asyncHandler(async (req, res) => {
-  const orders = await restaurantOrders(req.restaurant.id);
+  const orders = await restaurantOrders(req.restaurant?._id);
   res.status(200).json({ success: true, data: orders });
 });
 

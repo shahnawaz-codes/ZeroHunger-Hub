@@ -1,16 +1,23 @@
 import api from "@/lib/axios";
+import { handleResponse } from "@/utils/handleAPiRes";
 
 export const foodService = {
+  //public
   getAllFoods: async () => {
-    const { data } = await api.get("/foods");
-    return data.data;
+    const res = await api.get("/foods");
+    return handleResponse(res);
   },
-  getFoodById: async (id) => {
-    const { data } = await api.get(`/foods/${id}`);
-    return data.data;
+  getFoodById: async (foodId) => {
+    const res = await api.get(`/foods/${foodId}`);
+    return handleResponse(res);
   },
+  // private
   createFood: async (foodData) => {
-    const { data } = await api.post("/foods", foodData);
-    return data.data;
+    const res = await api.post("/restaurants/foods", foodData);
+    return handleResponse(res);
+  },
+  getMyFood: async () => {
+    const res = await api.get("/restaurants/foods");
+    return handleResponse(res);
   },
 };

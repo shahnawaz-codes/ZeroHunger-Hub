@@ -8,8 +8,6 @@ const {
   handleCreateOrder,
   handleGetMyOrders,
   handleGetOrderById,
-  handleGetRestaurantOrders,
-  handleUpdateOrderStatus,
   cancelOrderByUserHandler,
 } = require("./order.controller");
 
