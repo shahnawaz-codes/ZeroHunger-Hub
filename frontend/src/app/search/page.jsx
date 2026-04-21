@@ -3,6 +3,16 @@ import { useState } from 'react';
 import { FoodCard } from '@/components/FoodCard';
 import { FOOD_LISTINGS, CATEGORIES } from '@/lib/dummy-data';
 
+/**
+ * Render a searchable, filterable food listings page with client-side query and filter controls.
+ *
+ * Renders a search input, a toggleable filter panel (cuisine toggles, max price/distance/time sliders),
+ * and a results area that displays matching FOOD_LISTINGS or an empty-state. Manages local state for
+ * the text query, selected cuisines, maxPrice (default 500), maxDistance (default 10), maxTimeLeft (default 180),
+ * and filter panel visibility; exposes cuisine toggling and a clear-filters action.
+ *
+ * @returns {JSX.Element} The search page UI.
+ */
 export default function SearchPage() {
   const [query, setQuery] = useState('');
   const [selectedCuisines, setSelectedCuisines] = useState([]);

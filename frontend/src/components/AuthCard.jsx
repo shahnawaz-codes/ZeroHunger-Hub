@@ -1,5 +1,17 @@
 import Link from 'next/link';
 
+/**
+ * Render an authentication page layout with a centered card, header, and footer.
+ *
+ * @param {Object} props - Component props.
+ * @param {string} props.title - Main header text displayed in the header `<h1>`.
+ * @param {string} props.subtitle - Supporting header text displayed below the title.
+ * @param {React.ReactNode} props.children - Content rendered inside the card container.
+ * @param {string} props.footerText - Prefix text shown in the footer before the footer link.
+ * @param {string} props.footerLinkLabel - Label for the footer link.
+ * @param {string} props.footerLinkHref - Destination href for the footer link.
+ * @returns {JSX.Element} The full-page authentication layout containing a header, card, and footer.
+ */
 export function AuthCard({
   title,
   subtitle,
