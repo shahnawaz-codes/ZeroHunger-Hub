@@ -4,6 +4,11 @@ import { useState } from "react";
 
 export const useFood = () => {
   const [foods, setFoods] = useState("");
+  /**
+   * Fetches all food items from the service and stores them in the hook's local `foods` state.
+   *
+   * Logs an error message to the console if the fetch fails.
+   */
   async function allFoods() {
     try {
       const data = await foodService.getAllFoods();

@@ -20,6 +20,14 @@ const STATUS_CONFIG = {
   },
 };
 
+/**
+ * Render a five-star rating control that displays the current selection and lets the user pick a rating.
+ *
+ * @param {Object} props
+ * @param {number} props.value - Current rating (1–5); stars with index less than or equal to this appear selected.
+ * @param {(n: number) => void} props.onChange - Callback invoked with the chosen rating (1–5) when a star is clicked.
+ * @returns {JSX.Element} The star rating React element.
+ */
 function StarRating({ value, onChange }) {
   return (
     <div className="flex gap-1">
@@ -36,6 +44,32 @@ function StarRating({ value, onChange }) {
   );
 }
 
+/**
+ * Render a single order card displaying order details and controls for active or historical orders.
+ *
+ * Displays order image, food and restaurant info, pickup slot or order timestamp, price and savings,
+ * and CO₂ impact. When `isActive` is true, shows an "Active Order" header, status pill, optional
+ * pickup code (for `ready_for_pickup`), and a "View →" link. When `isActive` is false, renders a
+ * 1–5 star rating control and a thank-you acknowledgement after rating; rating is kept in local state.
+ *
+ * @param {Object} props
+ * @param {Object} props.order - Order data. Expected properties:
+ *   - {string} id
+ *   - {string} orderId
+ *   - {string} image
+ *   - {string} foodName
+ *   - {string} restaurantName
+ *   - {string} pickupSlot
+ *   - {string} date
+ *   - {string} orderTime
+ *   - {number|string} price
+ *   - {number|string} savings
+ *   - {number|string} co2Saved
+ *   - {string} subStatus
+ *   - {number} [rating]
+ * @param {boolean} props.isActive - Whether the order is in the "Active" tab; controls conditional UI.
+ * @returns {JSX.Element} The rendered order card component.
+ */
 function OrderCard({ order, isActive }) {
   const [rating, setRating] = useState(order.rating || 0);
   const [rated, setRated] = useState(!!order.rating);
@@ -146,6 +180,11 @@ function OrderCard({ order, isActive }) {
   );
 }
 
+/**
+ * Render the Orders page UI with an impact summary, tabs for "Active" and "History", and the corresponding order listings.
+ *
+ * @returns {JSX.Element} The Orders page element.
+ */
 export default function OrdersPage() {
   const [tab, setTab] = useState("active");
   const active = MY_ORDERS.filter((o) => o.status === "active");
