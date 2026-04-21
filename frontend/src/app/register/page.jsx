@@ -12,12 +12,13 @@ export default function RegisterPage() {
   const { register: signup } = useAuth();
 
   const {
-    register, // register function to track form inputs
+    register, // register function to track form inputs like name, email, password, confirmPassword
     handleSubmit, // function to handle form submission
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid }, // formState to track validation errors and submission state
   } = useForm({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(registerSchema), // use zod schema for validation
   });
+  console.log("isValid", isValid);
 
   const onSubmit = async (values) => {
     try {
@@ -68,7 +69,12 @@ export default function RegisterPage() {
           error={errors.confirmPassword?.message}
           {...register("confirmPassword")}
         />
-        <Button type="submit" fullWidth isLoading={isSubmitting}>
+        <Button
+          type="submit"
+          fullWidth
+          isLoading={isSubmitting}
+          disabled={!isValid}
+        >
           Create Account
         </Button>
       </form>

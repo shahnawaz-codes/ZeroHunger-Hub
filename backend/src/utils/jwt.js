@@ -9,7 +9,11 @@ const signToken = (id, isVerified, res) => {
   });
   return res.cookie("token", token, {
     httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === "production",
+    /**
+     * if in production, set SameSite to 'none' to allow cross-site cookies (e.g., if frontend and backend are on different domains).
+     * if in development, set SameSite to 'lax' for better security while allowing cookies in typical dev setups.
+     */
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   });

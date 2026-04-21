@@ -1,5 +1,5 @@
-const asyncHandler = require('../../utils/asyncHandler');
-const { getUserById, updateProfile } = require('./user.service');
+const asyncHandler = require("../../utils/asyncHandler");
+const { getUserById, updateProfile } = require("./user.service");
 
 /** GET /api/users/me */
 const getMe = asyncHandler(async (req, res) => {
@@ -9,7 +9,7 @@ const getMe = asyncHandler(async (req, res) => {
 
 /** PATCH /api/users/me */
 const updateMe = asyncHandler(async (req, res) => {
-  const user = await updateProfile(req.user.id, req.body);
+  const user = await updateProfile(req.user._id, req.body);
   res.json({ success: true, data: user });
 });
 

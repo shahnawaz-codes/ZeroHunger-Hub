@@ -1,20 +1,18 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@/hooks/useAuth';
-import { loginSchema } from '@/lib/validations';
-import { Button, Input, showToast } from '@/components/ui';
-import { AuthCard } from '@/components/AuthCard';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/hooks/useAuth";
+import { loginSchema } from "@/lib/validations";
+import { Button, Input, showToast } from "@/components/ui";
+import { AuthCard } from "@/components/AuthCard";
 export default function LoginPage() {
   const { login } = useAuth();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting, isValid },
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
@@ -23,9 +21,7 @@ export default function LoginPage() {
     try {
       await login(values.email, values.password);
     } catch (err) {
-      showToast.error(err?.message || 'Login failed.');
-    } finally {
-      setIsSubmitting(false);
+      showToast.error(err?.message || "Login failed.");
     }
   };
 
@@ -44,7 +40,7 @@ export default function LoginPage() {
           placeholder="you@example.com"
           autoComplete="email"
           error={errors.email?.message}
-          {...register('email')}
+          {...register("email")}
         />
         <Input
           label="Password"
@@ -52,9 +48,14 @@ export default function LoginPage() {
           placeholder="••••••••"
           autoComplete="current-password"
           error={errors.password?.message}
-          {...register('password')}
+          {...register("password")}
         />
-        <Button type="submit" fullWidth isLoading={isSubmitting}>
+        <Button
+          type="submit"
+          fullWidth
+          isLoading={isSubmitting}
+          disabled={!isValid}
+        >
           Sign In
         </Button>
       </form>
