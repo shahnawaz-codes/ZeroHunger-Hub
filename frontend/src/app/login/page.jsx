@@ -7,6 +7,15 @@ import { useAuth } from "@/hooks/useAuth";
 import { loginSchema } from "@/lib/validations";
 import { Button, Input, showToast } from "@/components/ui";
 import { AuthCard } from "@/components/AuthCard";
+/**
+ * Render the login page with a validated sign-in form inside an AuthCard.
+ *
+ * The form validates input using the `loginSchema` resolver, submits credentials
+ * to the authentication service via `login(email, password)`, and displays an
+ * error toast if authentication fails.
+ *
+ * @returns {JSX.Element} The login page component containing email and password inputs and a submit button.
+ */
 export default function LoginPage() {
   const { login } = useAuth();
   const {

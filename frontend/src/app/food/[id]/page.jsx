@@ -5,6 +5,14 @@ import { useRouter } from 'next/navigation';
 import { FOOD_LISTINGS } from '@/lib/dummy-data';
 import toast from 'react-hot-toast';
 
+/**
+ * Compute urgency styling and a human-readable label from a remaining time in minutes.
+ * @param {number} minutes - Minutes until the item expires (integer, >= 0).
+ * @returns {{color: string, bar: string, label: string}} An object with:
+ *  - `color`: Tailwind classes for text and background styling.
+ *  - `bar`: Tailwind class for the accent/progress bar color.
+ *  - `label`: A concise human-facing label describing the remaining time (e.g., "25m left — Order now!", "1h 15m left").
+ */
 function getUrgency(minutes) {
   if (minutes <= 30) return { color: 'text-red-500 bg-red-50', bar: 'bg-red-500', label: `${minutes}m left — Order now!` };
   if (minutes <= 60) return { color: 'text-amber-600 bg-amber-50', bar: 'bg-amber-500', label: `${minutes}m left — Going fast` };
@@ -12,6 +20,17 @@ function getUrgency(minutes) {
   return { color: 'text-emerald-600 bg-emerald-50', bar: 'bg-emerald-500', label: m > 0 ? `${h}h ${m}m left` : `${h}h left` };
 }
 
+/**
+ * Renders the food listing detail page for a given route `id`, including image, urgency ribbon,
+ * pricing, pickup-slot selection, and a sticky CTA to reserve the item.
+ *
+ * Displays a full-page "Listing not found" state when the listing cannot be found. Selecting a
+ * pickup slot and tapping the reserve CTA validates the selection, shows toast feedback, and
+ * navigates to the orders page.
+ *
+ * @param {{ params: { id: string } }} props - Route props object containing `params.id` (the listing id).
+ * @returns {JSX.Element} The food detail page UI.
+ */
 export default function FoodDetailPage({ params }) {
   const { id } = use(params);
   const router = useRouter();
