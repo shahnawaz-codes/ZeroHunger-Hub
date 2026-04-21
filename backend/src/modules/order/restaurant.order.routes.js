@@ -8,7 +8,7 @@ const {
   updateOrderStatusHandler,
   handleGetRestaurantOrders,
 } = require("./order.controller");
-const attachRestaurant = require("../../middleware/restaurant.middleware");
+const { attachRestaurant, requireRestaurant } = require("../../middleware/restaurant.middleware");
 
 const router = Router();
 
@@ -16,7 +16,7 @@ router.use(
   protect,
   requireVerified,
   restrictTo("restaurant"),
-  attachRestaurant,
+  attachRestaurant,requireRestaurant
 );
 
 router.get("/", handleGetRestaurantOrders);

@@ -1,6 +1,19 @@
 'use client';
 import Link from 'next/link';
 
+/**
+ * Determine badge styling and label for a remaining time expressed in minutes.
+ *
+ * @param {number} minutes - Remaining time in minutes.
+ * @returns {{color: string, text: string}} An object with:
+ *  - `color`: a Tailwind CSS background color class representing urgency,
+ *  - `text`: a human-readable remaining time (e.g., "25m left", "1h 30m", "2h left").
+ * 
+ * Behavior:
+ *  - minutes <= 30: red badge with minutes and "left".
+ *  - minutes <= 60: amber badge with minutes and "left".
+ *  - minutes > 60: emerald badge with hours and optional minutes.
+ */
 function getUrgency(minutes) {
   if (minutes <= 30) return { color: 'bg-red-500', text: `${minutes}m left` };
   if (minutes <= 60) return { color: 'bg-amber-500', text: `${minutes}m left` };
@@ -8,6 +21,14 @@ function getUrgency(minutes) {
   return { color: 'bg-emerald-600', text: m > 0 ? `${h}h ${m}m` : `${h}h left` };
 }
 
+/**
+ * Render a clickable food card showing image, urgency/discount/low-stock badges, metadata, tags, and pricing.
+ *
+ * @param {Object} props
+ * @param {Object} props.food - Food item data. Required properties: `id` (string|number), `image` (string URL), `name` (string), `expiresInMinutes` (number), `discountedPrice` (number), `originalPrice` (number), `quantityLeft` (number), `restaurantName` (string), `distance` (number), `tags` (string[]), `rating` (number).
+ * @param {boolean} [props.compact=false] - When true, render a compact variant with reduced image and text sizes and hide tag pills.
+ * @returns {JSX.Element} The Link-wrapped card element for the given food item.
+ */
 export function FoodCard({ food, compact = false }) {
   const urgency = getUrgency(food.expiresInMinutes);
   const discount = Math.round((1 - food.discountedPrice / food.originalPrice) * 100);

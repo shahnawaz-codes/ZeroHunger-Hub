@@ -8,6 +8,17 @@ import { registerSchema } from "@/lib/validations";
 import { Button, Input, showToast } from "@/components/ui";
 import { AuthCard } from "@/components/AuthCard";
 
+/**
+ * Render the registration page containing a validated signup form.
+ *
+ * The form validates input against the `registerSchema`, displays field-level
+ * validation errors, shows a loading state while submitting, and disables the
+ * submit button until the form is valid. On submit, the component calls the
+ * authentication `signup` function with the provided name, email, and password;
+ * failures surface an error toast.
+ *
+ * @returns {JSX.Element} The registration page React element.
+ */
 export default function RegisterPage() {
   const { register: signup } = useAuth();
 

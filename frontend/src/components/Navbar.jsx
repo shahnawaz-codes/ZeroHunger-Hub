@@ -9,6 +9,15 @@ const navItems = [
   { href: '/restaurant', label: 'Restaurant', icon: StoreIcon },
 ];
 
+/**
+ * Render the site's responsive navigation UI with a top header for desktop and a bottom bar for mobile.
+ *
+ * The header includes the logo, desktop navigation pills with route-aware active styling, and right-side actions;
+ * the mobile bar shows icon+label links with the same active logic derived from the current pathname.
+ * Active state is computed so the root path (`/`) is active only when the pathname equals `/`, and other items are active when the pathname starts with their `href`.
+ *
+ * @returns {JSX.Element} The Navbar element containing the desktop header and mobile bottom navigation.
+ */
 export function Navbar() {
   const pathname = usePathname();
   const isRestaurant = pathname.startsWith('/restaurant');
@@ -83,7 +92,11 @@ export function Navbar() {
   );
 }
 
-/* ---------- Inline SVG Icons ---------- */
+/**
+ * Render a home-shaped SVG icon.
+ * @param {number} [size=20] - Width and height of the icon in pixels.
+ * @returns {JSX.Element} The SVG element representing a home icon.
+ */
 function HomeIcon({ size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
@@ -91,6 +104,12 @@ function HomeIcon({ size = 20 }) {
     </svg>
   );
 }
+/**
+ * Renders a magnifying-glass (search) SVG icon.
+ * @param {Object} props
+ * @param {number} [props.size=20] - Icon width and height in pixels.
+ * @returns {JSX.Element} The SVG element representing a search icon.
+ */
 function SearchIcon({ size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -98,6 +117,12 @@ function SearchIcon({ size = 20 }) {
     </svg>
   );
 }
+/**
+ * Renders a shopping bag SVG icon.
+ * @param {Object} props
+ * @param {number} [props.size=20] - Icon width and height in pixels.
+ * @returns {JSX.Element} A bag-shaped SVG icon.
+ */
 function BagIcon({ size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -107,6 +132,12 @@ function BagIcon({ size = 20 }) {
     </svg>
   );
 }
+/**
+ * Render a storefront SVG icon.
+ *
+ * @param {number} [size=20] - Icon width and height in pixels.
+ * @returns {JSX.Element} The SVG element for a store/front storefront icon sized to the given `size`.
+ */
 function StoreIcon({ size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -115,6 +146,10 @@ function StoreIcon({ size = 20 }) {
     </svg>
   );
 }
+/**
+ * Renders a downward chevron SVG icon.
+ * @returns {JSX.Element} An SVG element representing a downwards-pointing chevron.
+ */
 function ChevronIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">

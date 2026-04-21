@@ -6,25 +6,26 @@ const createFood = async (data, restaurantId) => {
     name,
     description,
     pricing, // {original, discounted}
-    expiryDate,
     category,
-    totalQuantity,
+    quantity,
     pickupSlots, //[{start, end}]
     expiryTime,
     tags,
   } = data;
   const { original, discount } = pricing;
   if (discount > original) {
-    throw new AppError("price should be greater than discount ", 400);
+    throw new AppError(
+      "original price should be greater than discounted price ",
+      400,
+    );
   }
   const food = await Food.create({
     name,
     description,
     pricing,
     quantity: {
-      total: totalQuantity,
+      total: quantity,
     },
-    expiryDate,
     restaurant: restaurantId,
     category,
     pickupSlots,

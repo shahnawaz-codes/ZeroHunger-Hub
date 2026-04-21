@@ -9,7 +9,16 @@ const ORDER_STATUS = {
   completed: { label: 'Done', color: 'bg-gray-100 text-gray-600' },
 };
 
-/* ── Stat Card ──────────────────────────── */
+/**
+ * Render a compact metric card with an emoji, a prominent value (optionally with a unit), and a descriptive label.
+ * @param {{emoji: string, value: string|number, unit?: string, label: string, accent?: boolean}} props
+ * @param {string} props.emoji - A single-character or emoji string shown prominently at the top-left.
+ * @param {string|number} props.value - The main metric value to display.
+ * @param {string} [props.unit] - Optional unit text displayed alongside the value (e.g., "kg", "%", "k").
+ * @param {string} props.label - A short descriptive label shown below the value.
+ * @param {boolean} [props.accent=false] - When true, use the accent (primary) styling variant; otherwise use the default white/bordered variant.
+ * @returns {JSX.Element} A styled JSX element representing the stat card.
+ */
 function StatCard({ emoji, value, unit, label, accent = false }) {
   return (
     <div className={`rounded-2xl p-4 ${accent ? 'bg-primary-500' : 'bg-white border border-gray-100'} shadow-sm`}>
@@ -22,7 +31,20 @@ function StatCard({ emoji, value, unit, label, accent = false }) {
   );
 }
 
-/* ── Overview Tab ───────────────────────── */
+/**
+ * Renders the "Overview" tab showing today's, this week's, and all-time impact metrics for the restaurant.
+ * @param {Object} props
+ * @param {Object} props.stats - Aggregated impact statistics.
+ * @param {number} props.stats.todayMealsSaved - Meals saved today.
+ * @param {number} props.stats.todayEarnings - Earnings for today (number, will be formatted for display).
+ * @param {number} props.stats.todayCO2Saved - Kilograms of CO₂ saved today.
+ * @param {number} props.stats.weeklyMealsSaved - Meals saved this week.
+ * @param {number} props.stats.weeklyEarnings - Earnings for the week (number, displayed as formatted k‑value).
+ * @param {number} props.stats.weeklyCO2Saved - Kilograms of CO₂ prevented this week.
+ * @param {number} props.stats.totalMealsSaved - Total meals rescued (all time).
+ * @param {number} props.stats.totalCO2Saved - Total kilograms of CO₂ never emitted (all time).
+ * @returns {JSX.Element} The Overview tab UI with stat cards and an all-time impact summary.
+ */
 function OverviewTab({ stats }) {
   return (
     <div className="space-y-6 animate-fade-in">
@@ -53,7 +75,15 @@ function OverviewTab({ stats }) {
   );
 }
 
-/* ── Listings Tab ───────────────────────── */
+/**
+ * Render the Listings tab showing current food listings and controls to add, edit, or remove items.
+ *
+ * @param {Object[]} listings - Array of listing objects to display.
+ *   Each listing is expected to include: `id`, `name`, `image`, `status` ('active' or other),
+ *   `pickupSlot`, `discountedPrice`, `originalPrice`, `quantityLeft`, `totalQuantity`, and `ordersReceived`.
+ * @param {Function} onAdd - Callback invoked when the "+ Add New" button is clicked.
+ * @return {JSX.Element} The rendered Listings tab element.
+ */
 function ListingsTab({ listings, onAdd }) {
   return (
     <div className="animate-fade-in">
@@ -109,7 +139,20 @@ function ListingsTab({ listings, onAdd }) {
   );
 }
 
-/* ── Orders Tab ─────────────────────────── */
+/**
+ * Render a filterable list of restaurant orders with status badges and basic order details.
+ *
+ * @param {Object[]} orders - Array of order objects to display. Each order should include:
+ *   - id: unique identifier
+ *   - customerName: customer's full name
+ *   - status: one of the order status keys (e.g., 'confirmed', 'ready_for_pickup', 'completed')
+ *   - foodName: name of the ordered item
+ *   - pickupSlot: scheduled pickup time/slot
+ *   - orderId: merchant-visible order identifier
+ *   - price: numeric or string price to display
+ *   - orderTime: formatted time string for the order
+ * @returns {JSX.Element} The Orders tab UI containing filter buttons and a list of order cards.
+ */
 function OrdersTab({ orders }) {
   const [filter, setFilter] = useState('all');
   const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
@@ -159,7 +202,17 @@ function OrdersTab({ orders }) {
   );
 }
 
-/* ── Add Food Tab ───────────────────────── */
+/**
+ * Renders the "Add Food" tab: a form to create and publish a new food listing.
+ *
+ * Validates required fields and that the discounted price is lower than the original,
+ * displays toast feedback for errors and success, simulates a short publish delay,
+ * and invokes the provided callback after a successful publish.
+ *
+ * @param {{ onSuccess: function }} props - Component props.
+ * @param {function} props.onSuccess - Callback called once the listing is successfully published.
+ * @returns {JSX.Element} The Add Food tab form UI.
+ */
 function AddFoodTab({ onSuccess }) {
   const [form, setForm] = useState({
     name: '', category: 'Indian', description: '',
@@ -272,7 +325,13 @@ function AddFoodTab({ onSuccess }) {
   );
 }
 
-/* ── Main Restaurant Dashboard ──────────── */
+/**
+ * Renders the restaurant dashboard with tabbed navigation for Overview, Listings, Orders, and Add Food.
+ *
+ * Maintains local tab state to switch views; the Orders tab shows a badge with the count of non-completed orders.
+ *
+ * @returns {JSX.Element} The dashboard UI element.
+ */
 export default function RestaurantPage() {
   const [tab, setTab] = useState('overview');
 

@@ -21,15 +21,20 @@ const foodSchema = new mongoose.Schema(
     },
 
     pricing: {
-      original: Number,
+      original: {
+        type: Number,
+        required: [true, "Original price is required."],
+        min: 0,
+      },
       discounted: {
         type: Number,
         default: 0,
+        min: 0,
         validate: {
           validator: function (val) {
-            return val < this.original;
+            return val <= this.original; // can be less than or equal
           },
-          message: "Discount cannot exceed original price",
+          message: "Discounted price cannot exceed original price",
         },
       },
     },
