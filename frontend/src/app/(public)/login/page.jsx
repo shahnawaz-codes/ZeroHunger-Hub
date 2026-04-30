@@ -7,6 +7,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { loginSchema } from "@/lib/validations";
 import { Button, Input, showToast } from "@/components/ui";
 import { AuthCard } from "@/components/AuthCard";
+import useLogin from "@/hooks/auth/useLogin";
+import { useRouter } from "next/navigation";
 /**
  * Render the login page with a validated sign-in form inside an AuthCard.
  *
@@ -17,7 +19,8 @@ import { AuthCard } from "@/components/AuthCard";
  * @returns {JSX.Element} The login page component containing email and password inputs and a submit button.
  */
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { mutate, isPending } = useLogin();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -26,9 +29,31 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (values) => {
+  const onSubmit = (values) => {
+    let payload = {
+      email: values.email,
+      password: values.password,
+    };
     try {
-      await login(values.email, values.password);
+      mutate(payload, {
+        onSuccess: () => {
+          router.push("/dashboard");
+        },
+        onError: (err) => {
+          if (
+            err?.code == "EMAIL_NOT_VERIFIED" ||
+            ere.response?.data?.message?.includes("verify")
+          ) {
+            sessionStorage.setItem("pendingVerification", values.email);
+            router.push(
+              `/verify-email?email=${encodeURIComponent(values.email)}&redirect=/dashboard`,
+            );
+          }
+          showToast.error(
+            err?.message || "Login failed. Please check your credentials.",
+          );
+        },
+      });
     } catch (err) {
       showToast.error(err?.message || "Login failed.");
     }
@@ -62,7 +87,7 @@ export default function LoginPage() {
         <Button
           type="submit"
           fullWidth
-          isLoading={isSubmitting}
+          isLoading={isPending}
           disabled={!isValid}
         >
           Sign In

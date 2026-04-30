@@ -18,6 +18,7 @@ const loginHandler = asyncHandler(async (req, res) => {
     res.json({
       success: false,
       message: "Please verify your email. OTP has been sent if not received.",
+      code: "EMAIL_NOT_VERIFIED",
       data: createAuthResponse(user),
     });
     return;

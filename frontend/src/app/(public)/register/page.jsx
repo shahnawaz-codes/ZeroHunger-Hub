@@ -7,6 +7,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { registerSchema } from "@/lib/validations";
 import { Button, Input, showToast } from "@/components/ui";
 import { AuthCard } from "@/components/AuthCard";
+import toast from "react-hot-toast";
+import useRegister from "@/hooks/auth/useRegister";
+import { useRouter } from "next/navigation";
 
 /**
  * Render the registration page containing a validated signup form.
@@ -20,8 +23,8 @@ import { AuthCard } from "@/components/AuthCard";
  * @returns {JSX.Element} The registration page React element.
  */
 export default function RegisterPage() {
-  const { register: signup } = useAuth();
-
+  const { mutate: signup, error } = useRegister();
+  const router = useRouter();
   const {
     register, // register function to track form inputs like name, email, password, confirmPassword
     handleSubmit, // function to handle form submission
@@ -29,14 +32,26 @@ export default function RegisterPage() {
   } = useForm({
     resolver: zodResolver(registerSchema), // use zod schema for validation
   });
-  console.log("isValid", isValid);
 
-  const onSubmit = async (values) => {
-    try {
-      await signup(values.name, values.email, values.password);
-    } catch (err) {
-      showToast.error(err?.message || "Registration failed.");
-    }
+  const onSubmit = (values) => {
+    const payload = {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+    };
+    signup(payload, {
+      onSuccess: (data, variables) => {
+        sessionStorage.setItem("pendingVerification", variables.email);
+        setTimeout(() => {
+          router.push(
+            `/verify-email?email=${encodeURIComponent(variables.email)}`,
+          );
+        }, 1000);
+        toast.success(
+          "Registration successful! Please check your email for verification.",
+        );
+      },
+    });
   };
 
   return (

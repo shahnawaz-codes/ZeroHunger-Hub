@@ -1,12 +1,12 @@
-'use client';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navItems = [
-  { href: '/', label: 'Home', icon: HomeIcon },
-  { href: '/search', label: 'Explore', icon: SearchIcon },
-  { href: '/orders', label: 'Orders', icon: BagIcon },
-  { href: '/restaurant', label: 'Restaurant', icon: StoreIcon },
+  { href: "/", label: "Home", icon: HomeIcon },
+  { href: "/discover", label: "discover", icon: SearchIcon },
+  { href: "/orders", label: "Orders", icon: BagIcon },
+  { href: "/restaurant", label: "Restaurant", icon: StoreIcon },
 ];
 
 /**
@@ -20,7 +20,7 @@ const navItems = [
  */
 export function Navbar() {
   const pathname = usePathname();
-  const isRestaurant = pathname.startsWith('/restaurant');
+  const isRestaurant = pathname.startsWith("/restaurant");
 
   return (
     <>
@@ -37,15 +37,16 @@ export function Navbar() {
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1">
             {navItems.map(({ href, label }) => {
-              const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+              const active =
+                href === "/" ? pathname === "/" : pathname.startsWith(href);
               return (
                 <Link
                   key={href}
                   href={href}
                   className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
                     active
-                      ? 'bg-primary-500 text-white'
-                      : 'text-white/60 hover:text-white hover:bg-white/10'
+                      ? "bg-primary-500 text-white"
+                      : "text-white/60 hover:text-white hover:bg-white/10"
                   }`}
                 >
                   {label}
@@ -72,13 +73,14 @@ export function Navbar() {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#111] border-t border-white/10 pb-safe">
         <div className="grid grid-cols-4 h-16">
           {navItems.map(({ href, label, icon: Icon }) => {
-            const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+            const active =
+              href === "/" ? pathname === "/" : pathname.startsWith(href);
             return (
               <Link
                 key={href}
                 href={href}
                 className={`flex flex-col items-center justify-center gap-0.5 transition-colors ${
-                  active ? 'text-primary-500' : 'text-white/40'
+                  active ? "text-primary-500" : "text-white/40"
                 }`}
               >
                 <Icon size={active ? 22 : 20} />
@@ -112,8 +114,17 @@ function HomeIcon({ size = 20 }) {
  */
 function SearchIcon({ size = 20 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-      <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.35-4.35" />
     </svg>
   );
 }
@@ -125,7 +136,16 @@ function SearchIcon({ size = 20 }) {
  */
 function BagIcon({ size = 20 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
       <line x1="3" y1="6" x2="21" y2="6" />
       <path d="M16 10a4 4 0 0 1-8 0" />
@@ -140,7 +160,16 @@ function BagIcon({ size = 20 }) {
  */
 function StoreIcon({ size = 20 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9 22 9 12 15 12 15 22" />
     </svg>
@@ -152,7 +181,15 @@ function StoreIcon({ size = 20 }) {
  */
 function ChevronIcon() {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+    >
       <polyline points="6 9 12 15 18 9" />
     </svg>
   );

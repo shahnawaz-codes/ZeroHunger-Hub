@@ -1,9 +1,9 @@
-'use client';
-import { use, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { FOOD_LISTINGS } from '@/lib/dummy-data';
-import toast from 'react-hot-toast';
+"use client";
+import { use, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FOOD_LISTINGS } from "@/lib/dummy-data";
+import toast from "react-hot-toast";
 
 /**
  * Compute urgency styling and a human-readable label from a remaining time in minutes.
@@ -14,10 +14,25 @@ import toast from 'react-hot-toast';
  *  - `label`: A concise human-facing label describing the remaining time (e.g., "25m left — Order now!", "1h 15m left").
  */
 function getUrgency(minutes) {
-  if (minutes <= 30) return { color: 'text-red-500 bg-red-50', bar: 'bg-red-500', label: `${minutes}m left — Order now!` };
-  if (minutes <= 60) return { color: 'text-amber-600 bg-amber-50', bar: 'bg-amber-500', label: `${minutes}m left — Going fast` };
-  const h = Math.floor(minutes / 60), m = minutes % 60;
-  return { color: 'text-emerald-600 bg-emerald-50', bar: 'bg-emerald-500', label: m > 0 ? `${h}h ${m}m left` : `${h}h left` };
+  if (minutes <= 30)
+    return {
+      color: "text-red-500 bg-red-50",
+      bar: "bg-red-500",
+      label: `${minutes}m left — Order now!`,
+    };
+  if (minutes <= 60)
+    return {
+      color: "text-amber-600 bg-amber-50",
+      bar: "bg-amber-500",
+      label: `${minutes}m left — Going fast`,
+    };
+  const h = Math.floor(minutes / 60),
+    m = minutes % 60;
+  return {
+    color: "text-emerald-600 bg-emerald-50",
+    bar: "bg-emerald-500",
+    label: m > 0 ? `${h}h ${m}m left` : `${h}h left`,
+  };
 }
 
 /**
@@ -34,7 +49,7 @@ function getUrgency(minutes) {
 export default function FoodDetailPage({ params }) {
   const { id } = use(params);
   const router = useRouter();
-  const food = FOOD_LISTINGS.find(f => f.id === id);
+  const food = FOOD_LISTINGS.find((f) => f.id === id);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [ordering, setOrdering] = useState(false);
 
@@ -44,8 +59,15 @@ export default function FoodDetailPage({ params }) {
         <div className="flex-1 flex items-center justify-center text-center p-8">
           <div>
             <p className="text-5xl mb-3">😕</p>
-            <p className="font-display font-bold text-xl text-gray-700">Listing not found</p>
-            <Link href="/" className="mt-4 inline-block text-primary-500 font-semibold">← Back to Home</Link>
+            <p className="font-display font-bold text-xl text-gray-700">
+              Listing not found
+            </p>
+            <Link
+              href="/"
+              className="mt-4 inline-block text-primary-500 font-semibold"
+            >
+              ← Back to Home
+            </Link>
           </div>
         </div>
       </div>
@@ -53,17 +75,19 @@ export default function FoodDetailPage({ params }) {
   }
 
   const urgency = getUrgency(food.expiresInMinutes);
-  const discount = Math.round((1 - food.discountedPrice / food.originalPrice) * 100);
+  const discount = Math.round(
+    (1 - food.discountedPrice / food.originalPrice) * 100,
+  );
 
   const handleReserve = async () => {
     if (!selectedSlot) {
-      toast.error('Please select a pickup slot first');
+      toast.error("Please select a pickup slot first");
       return;
     }
     setOrdering(true);
-    await new Promise(r => setTimeout(r, 1200));
-    toast.success('🎉 Order reserved! Check your orders.');
-    router.push('/orders');
+    await new Promise((r) => setTimeout(r, 1200));
+    toast.success("🎉 Order reserved! Check your orders.");
+    router.push("/orders");
   };
 
   return (
@@ -71,13 +95,23 @@ export default function FoodDetailPage({ params }) {
       <main className="max-w-2xl mx-auto pb-32 md:pb-10">
         {/* Hero image */}
         <div className="relative">
-          <img src={food.image} alt={food.name} className="w-full h-72 md:h-96 object-cover md:rounded-b-3xl" />
+          <img
+            src={food.image}
+            alt={food.name}
+            className="w-full h-72 md:h-96 object-cover md:rounded-b-3xl"
+          />
 
           {/* Urgency ribbon */}
-          <div className={`absolute bottom-4 left-4 right-4 ${urgency.color} rounded-2xl px-4 py-3 flex items-center gap-3`}>
-            <div className={`w-2 h-2 rounded-full ${urgency.bar} animate-pulse shrink-0`} />
+          <div
+            className={`absolute bottom-4 left-4 right-4 ${urgency.color} rounded-2xl px-4 py-3 flex items-center gap-3`}
+          >
+            <div
+              className={`w-2 h-2 rounded-full ${urgency.bar} animate-pulse shrink-0`}
+            />
             <p className="font-bold text-sm">{urgency.label}</p>
-            <span className={`ml-auto font-black text-lg bg-${discount >= 60 ? 'primary-500' : 'gray-800'} text-white px-3 py-1 rounded-full text-sm`}>
+            <span
+              className={`ml-auto font-black text-lg bg-${discount >= 60 ? "primary-500" : "gray-800"} text-white px-3 py-1 rounded-full text-sm`}
+            >
               -{discount}%
             </span>
           </div>
@@ -98,8 +132,12 @@ export default function FoodDetailPage({ params }) {
               {food.restaurantName[0]}
             </div>
             <div>
-              <p className="text-sm font-bold text-gray-700">{food.restaurantName}</p>
-              <p className="text-xs text-gray-400">📍 {food.address} · {food.distance} km away</p>
+              <p className="text-sm font-bold text-gray-700">
+                {food.restaurantName}
+              </p>
+              <p className="text-xs text-gray-400">
+                📍 {food.address} · {food.distance} km away
+              </p>
             </div>
             <div className="ml-auto flex items-center gap-1 bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">
               <span>⭐</span>
@@ -109,59 +147,90 @@ export default function FoodDetailPage({ params }) {
           </div>
 
           {/* Title */}
-          <h1 className="font-display font-black text-2xl text-gray-900 mb-2 leading-tight">{food.name}</h1>
+          <h1 className="font-display font-black text-2xl text-gray-900 mb-2 leading-tight">
+            {food.name}
+          </h1>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-1.5 mb-4">
-            {food.tags.map(tag => (
-              <span key={tag} className={`tag-pill text-xs ${tag === 'Veg' || tag === 'Vegan' ? 'bg-green-50 text-green-700' : tag === 'Healthy' ? 'bg-emerald-50 text-emerald-700' : 'bg-orange-50 text-orange-700'}`}>
+            {food.tags.map((tag) => (
+              <span
+                key={tag}
+                className={`tag-pill text-xs ${tag === "Veg" || tag === "Vegan" ? "bg-green-50 text-green-700" : tag === "Healthy" ? "bg-emerald-50 text-emerald-700" : "bg-orange-50 text-orange-700"}`}
+              >
                 {tag}
               </span>
             ))}
-            <span className="tag-pill bg-blue-50 text-blue-700">🌍 Saves {food.co2Saved}kg CO₂</span>
+            <span className="tag-pill bg-blue-50 text-blue-700">
+              🌍 Saves {food.co2Saved}kg CO₂
+            </span>
           </div>
 
           {/* Description */}
-          <p className="text-gray-600 text-sm leading-relaxed mb-5">{food.description}</p>
+          <p className="text-gray-600 text-sm leading-relaxed mb-5">
+            {food.description}
+          </p>
 
           {/* Price block */}
           <div className="bg-white border border-gray-100 rounded-2xl p-4 mb-5 shadow-sm">
             <div className="flex items-center gap-3 mb-1">
-              <span className="text-3xl font-black text-gray-900">₹{food.discountedPrice}</span>
+              <span className="text-3xl font-black text-gray-900">
+                ₹{food.discountedPrice}
+              </span>
               <div>
-                <span className="text-sm text-gray-400 line-through block">₹{food.originalPrice}</span>
-                <span className="text-xs font-bold text-emerald-600">You save ₹{food.originalPrice - food.discountedPrice}</span>
+                <span className="text-sm text-gray-400 line-through block">
+                  ₹{food.originalPrice}
+                </span>
+                <span className="text-xs font-bold text-emerald-600">
+                  You save ₹{food.originalPrice - food.discountedPrice}
+                </span>
               </div>
-              <span className="ml-auto bg-primary-500 text-white font-black text-lg px-3 py-1.5 rounded-xl">-{discount}%</span>
+              <span className="ml-auto bg-primary-500 text-white font-black text-lg px-3 py-1.5 rounded-xl">
+                -{discount}%
+              </span>
             </div>
             <div className="flex items-center gap-4 pt-2 border-t border-gray-100 mt-2">
               <div className="flex items-center gap-1.5">
-                <div className={`w-2 h-2 rounded-full ${food.quantityLeft > 3 ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                <div
+                  className={`w-2 h-2 rounded-full ${food.quantityLeft > 3 ? "bg-emerald-500" : "bg-red-500"}`}
+                />
                 <span className="text-xs font-semibold text-gray-600">
-                  {food.quantityLeft <= 0 ? 'Sold out' : food.quantityLeft <= 2 ? `Last ${food.quantityLeft}!` : `${food.quantityLeft} of ${food.quantity} left`}
+                  {food.quantityLeft <= 0
+                    ? "Sold out"
+                    : food.quantityLeft <= 2
+                      ? `Last ${food.quantityLeft}!`
+                      : `${food.quantityLeft} of ${food.quantity} left`}
                 </span>
               </div>
               <span className="text-xs text-gray-400">·</span>
-              <span className="text-xs font-semibold text-gray-600">🥡 Pickup only</span>
+              <span className="text-xs font-semibold text-gray-600">
+                🥡 Pickup only
+              </span>
             </div>
           </div>
 
           {/* Pickup slot selector */}
           <div className="mb-5">
-            <h3 className="font-display font-bold text-base text-gray-900 mb-2.5">Choose Pickup Slot</h3>
+            <h3 className="font-display font-bold text-base text-gray-900 mb-2.5">
+              Choose Pickup Slot
+            </h3>
             <div className="grid grid-cols-1 gap-2">
-              {food.pickupSlots.map(slot => (
+              {food.pickupSlots.map((slot) => (
                 <button
                   key={slot}
                   onClick={() => setSelectedSlot(slot)}
                   className={`w-full p-3.5 rounded-xl border-2 text-sm font-semibold text-left transition-all flex items-center justify-between ${
                     selectedSlot === slot
-                      ? 'border-primary-500 bg-primary-50 text-primary-700'
-                      : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                      ? "border-primary-500 bg-primary-50 text-primary-700"
+                      : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
                   }`}
                 >
                   <span>🕐 {slot}</span>
-                  {selectedSlot === slot && <span className="text-primary-500 font-black text-lg">✓</span>}
+                  {selectedSlot === slot && (
+                    <span className="text-primary-500 font-black text-lg">
+                      ✓
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
@@ -173,7 +242,9 @@ export default function FoodDetailPage({ params }) {
             <div className="relative text-center">
               <p className="text-2xl mb-1">📍</p>
               <p className="text-sm font-bold text-gray-700">{food.address}</p>
-              <p className="text-xs text-gray-500">{food.distance} km from you</p>
+              <p className="text-xs text-gray-500">
+                {food.distance} km from you
+              </p>
             </div>
           </div>
         </div>
@@ -185,20 +256,27 @@ export default function FoodDetailPage({ params }) {
             disabled={ordering || food.quantityLeft === 0}
             className={`w-full py-4 rounded-2xl font-display font-black text-base flex items-center justify-center gap-2 transition-all ${
               food.quantityLeft === 0
-                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                : 'bg-primary-500 text-white hover:bg-primary-600 shadow-lg shadow-primary-500/30 active:scale-[0.98]'
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-primary-500 text-white hover:bg-primary-600 shadow-lg shadow-primary-500/30 active:scale-[0.98]"
             }`}
           >
             {ordering ? (
-              <><span className="animate-spin">⏳</span> Reserving...</>
+              <>
+                <span className="animate-spin">⏳</span> Reserving...
+              </>
             ) : food.quantityLeft === 0 ? (
-              'Sold Out'
+              "Sold Out"
             ) : (
-              <>Reserve for ₹{food.discountedPrice} {selectedSlot ? `· ${selectedSlot}` : ''}</>
+              <>
+                Reserve for ₹{food.discountedPrice}{" "}
+                {selectedSlot ? `· ${selectedSlot}` : ""}
+              </>
             )}
           </button>
           {!selectedSlot && food.quantityLeft > 0 && (
-            <p className="text-center text-xs text-gray-400 mt-1.5">Select a slot to continue</p>
+            <p className="text-center text-xs text-gray-400 mt-1.5">
+              Select a slot to continue
+            </p>
           )}
         </div>
       </main>

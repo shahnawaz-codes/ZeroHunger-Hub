@@ -1,19 +1,21 @@
-import { Toaster } from 'react-hot-toast';
-import './globals.css';
-import { Navbar } from '@/components/Navbar';
+import { Toaster } from "react-hot-toast";
+import "./globals.css";
+import { Navbar } from "@/components/Navbar";
+import Providers from "./providers";
 
 export const metadata = {
-  title: 'ZeroHunger',
-  description: 'Food Waste Reduction App',
+  title: "ZeroHunger",
+  description: "Food Waste Reduction App",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body>
-        <Navbar />
-        {children}
-        <Toaster position="top-right" />
+        <Providers>
+          {children}
+          <Toaster position="top-right" />
+        </Providers>
       </body>
     </html>
   );

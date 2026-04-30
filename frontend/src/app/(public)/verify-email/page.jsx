@@ -8,6 +8,9 @@ import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
 import { Button, Input, showToast } from "@/components/ui";
 import { AuthCard } from "@/components/AuthCard";
+import useResendOTP from "@/hooks/auth/useResendOTP";
+import useVerifyEmail from "@/hooks/auth/useVerifyEmail";
+import toast from "react-hot-toast";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +22,9 @@ const verifySchema = z.object({
 });
 
 function VerifyContent() {
-  const { verifyEmail, resendOtp } = useAuth();
+  // const { verifyEmail, resendOtp } = useAuth();
+  const { mutate: resendOtp } = useResendOTP();
+  const { mutate: verifyEmail } = useVerifyEmail();
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email");
@@ -42,7 +47,6 @@ function VerifyContent() {
    */
   useEffect(() => {
     const pending = sessionStorage.getItem("pendingVerification");
-    console.log("pending ", pending);
     if (!pending || pending !== email) {
       return router.push("/register");
     }
@@ -65,13 +69,21 @@ function VerifyContent() {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const onSubmit = async (values) => {
+  const onSubmit = (values) => {
     if (!email) {
       showToast.error("Email not found. Please try registering again.");
       return;
     }
     try {
-      await verifyEmail(values.otp, email, redirect);
+      const payload = {
+        otp: values.otp,
+        email,
+      };
+      verifyEmail(payload, {
+        onSuccess: () => {
+          router.push(redirect);
+        },
+      });
       showToast.success("Email verified successfully!");
       sessionStorage.removeItem("pendingVerification");
     } catch (err) {
@@ -86,7 +98,11 @@ function VerifyContent() {
     }
     setIsResending(true);
     try {
-      await resendOtp(email);
+      resendOtp(email, {
+        onSuccess: () => {
+          toast.success("OTP resent successfully");
+        },
+      });
       setTimer(300);
       setCanResend(false);
     } catch (err) {
