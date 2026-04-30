@@ -93,7 +93,7 @@ export const useAuth = () => {
   const resendOtp = useCallback(async (email) => {
     try {
       await authService.resendOtp(email);
-      toast.success("OTP resent successfully");
+     
     } catch (error) {
       toast.error(error.message || "Failed to resend OTP");
       throw error;
@@ -111,6 +111,7 @@ export const useAuth = () => {
   }, [router]);
   return {
     userData,
+    setUserData,
     login,
     logout,
     register,

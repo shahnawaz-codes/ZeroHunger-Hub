@@ -1,32 +1,29 @@
 import api from "@/lib/axios";
+import { handleResponse } from "@/utils/handleApiRes";
 
 export const authService = {
-  async login(email, password) {
-    const { data } = await api.post("/auth/login", { email, password });
-    return data;
+  async login(payload) {
+    const res = await api.post("/auth/login", payload);
+    return handleResponse(res);
   },
 
-  async register(name, email, password) {
-    const { data } = await api.post("/auth/register", {
-      name,
-      email,
-      password,
-    });
-    return data.data;
+  async register(payload) {
+    const res = await api.post("/auth/register", payload);
+    return handleResponse(res);
   },
 
   async logout() {
-    const { data } = await api.post("/auth/logout");
-    return data;
+    const res = await api.post("/auth/logout");
+    return handleResponse(res);
   },
 
   async verifyEmail(otp, email) {
-    const { data } = await api.post("/auth/verify-email", { otp, email });
-    return data.data;
+    const res = await api.post("/auth/verify-email", { otp, email });
+    return handleResponse(res);
   },
 
   async resendOtp(email) {
-    const { data } = await api.post("/auth/resend-otp", { email });
-    return data;
+    const res = await api.post("/auth/resend-otp", { email });
+    return handleResponse(res);
   },
 };

@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { handleResponse } from "@/utils/handleAPiRes";
+import { handleResponse } from "@/utils/handleApiRes";
 
 export const foodService = {
   //public
