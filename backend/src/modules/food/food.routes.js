@@ -6,10 +6,11 @@ const {
 const { allFoodsHandler, foodByIdHandler } = require("./food.controller");
 
 const router = Router();
-router.use(protect, requireVerified);
 
-
-// this route is for search and filter food items later on
+  // Public routes - no auth required
 router.route("/").get(allFoodsHandler);
 router.get("/:foodId", foodByIdHandler);
+
+// // Protected routes below (if needed)
+// router.use(protect, requireVerified);
 module.exports = router;

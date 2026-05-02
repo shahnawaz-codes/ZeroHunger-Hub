@@ -1,3 +1,11 @@
+/**
+ * Generates HTML email template for email verification emails.
+ *
+ * Sends a professionally designed HTML email to users for OTP verification.
+ * Includes the 6-digit OTP code, branding, and instructions.
+ *
+ * @function getVerificationEmailHTML\n * @param {string} otp - 6-digit one-time password code\n * \n * @returns {string} Complete HTML email template as a string\n * \n * @description\n * - Returns complete HTML5 email template\n * - OTP digits are rendered as individual boxes\n * - Includes ZeroHunger branding and styling\n * - Uses embedded CSS for compatibility with email clients\n * - Responsive design (mobile-friendly)\n * - Dark theme with orange (#ff4d00) accent color\n * - Shows 10-minute expiration notice\n * - Includes security assurance text\n * \n * Email Layout:\n * 1. Brand header with logo and step indicator\n * 2. Main card with verification heading\n * 3. OTP display with 6 individual digit boxes\n * 4. How ZeroHunger works (3-step flow)\n * 5. Security notice about unsubscribe\n * 6. Footer with copyright\n * \n * Styling:\n * - Brand colors: Orange (#ff4d00) for accent, Dark grays for background\n * - Fonts: Syne (headings), Manrope (body text)\n * - Dark theme optimized for modern email clients\n * - All CSS is inline for email compatibility\n * \n * @example\n * // In auth service during registration\n * const otp = generateOTP();\n * const htmlEmail = getVerificationEmailHTML(otp);\n * await sendEmail(\n *   email,\n *   'Your ZeroHunger verification code 🍱',\n *   htmlEmail\n * );\n * \n * // Usage:\n * const html = getVerificationEmailHTML('123456');\n * // html now contains complete HTML email template with OTP rendered\n */
+
 const getVerificationEmailHTML = (otp) => `
 <!DOCTYPE html>
 <html lang="en">
@@ -125,7 +133,11 @@ const getVerificationEmailHTML = (otp) => `
       <p class="otp-label">Your verification code</p>
       <div class="otp-wrapper">
         <div class="otp-digits">
-          ${otp.toString().split('').map(d => `<div class="otp-digit">${d}</div>`).join('')}
+          ${otp
+            .toString()
+            .split("")
+            .map((d) => `<div class="otp-digit">${d}</div>`)
+            .join("")}
         </div>
         <p class="otp-expiry">Expires in 10 minutes</p>
       </div>
