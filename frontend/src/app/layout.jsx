@@ -1,6 +1,6 @@
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/layout/Navbar";
 import Providers from "./providers";
 
 export const metadata = {

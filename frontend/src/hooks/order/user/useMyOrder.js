@@ -1,9 +1,9 @@
 import { orderService } from "@/modules/order/order.service";
 import { useQuery } from "@tanstack/react-query";
 
-export default useMyOrder = () => {
+export default useMyOrder = (orderId) => {
   return useQuery({
-    queryKey: ["my-order"],
-    queryFn: (orderId) => orderService.orderById(orderId),
+    queryKey: ["my-order", orderId],
+    queryFn: () => orderService.orderById(orderId),
   });
 };

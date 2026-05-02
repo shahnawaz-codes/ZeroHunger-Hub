@@ -6,7 +6,7 @@ const navItems = [
   { href: "/", label: "Home", icon: HomeIcon },
   { href: "/discover", label: "discover", icon: SearchIcon },
   { href: "/orders", label: "Orders", icon: BagIcon },
-  { href: "/restaurant", label: "Restaurant", icon: StoreIcon },
+  { href: "/cart", label: "Cart", icon: StoreIcon },
 ];
 
 /**

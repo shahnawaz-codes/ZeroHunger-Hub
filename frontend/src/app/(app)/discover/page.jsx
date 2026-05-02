@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { FoodCard } from "@/components/FoodCard";
+import { FoodCard } from "@/components/food/FoodCard";
 import { FOOD_LISTINGS, CATEGORIES } from "@/lib/dummy-data";
 import useFoods from "@/hooks/food/useFoods";
 
@@ -14,9 +14,11 @@ import useFoods from "@/hooks/food/useFoods";
  *
  * @returns {JSX.Element} The search page UI.
  */
-export default function SearchPage() {
+export default function DiscoverPage() {
   const [showFilters, setShowFilters] = useState(false);
-  const { data: results, isLoading } = useFoods();
+  const { data: results = [], isLoading, isError, error } = useFoods();
+  console.log("results", results);
+  if (isError) console.error("error", error);
   const activeFiltersCount = 4;
   const clearFilters = () => {
     setShowFilters(false);
@@ -41,9 +43,9 @@ export default function SearchPage() {
           <p className="text-sm text-gray-500">
             <span className="font-bold text-gray-900">
               {results.length || 5}
-            </span>{" "}
+            </span>
             results
-            {query && <span className="text-gray-400"> for "{query}"</span>}
+            {/* {query && <span className="text-gray-400"> for "{query}"</span>} */}
           </p>
           <button
             onClick={() => setShowFilters(!showFilters)}
@@ -87,7 +89,7 @@ export default function SearchPage() {
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">
                     Cuisine
                   </label>
-                  <div className="flex flex-wrap gap-1.5">
+                  {/* <div className="flex flex-wrap gap-1.5">
                     {cuisines.map((c) => {
                       const cat = CATEGORIES.find((x) => x.id === c);
                       return (
@@ -104,7 +106,7 @@ export default function SearchPage() {
                         </button>
                       );
                     })}
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Price */}
@@ -117,7 +119,7 @@ export default function SearchPage() {
                     min={50}
                     max={500}
                     step={25}
-                    value={maxPrice}
+                    // value={maxPrice}
                     // onChange={(e) => setMaxPrice(+e.target.value)}
                     className="w-full accent-primary-500 cursor-pointer"
                   />
@@ -181,7 +183,24 @@ export default function SearchPage() {
 
           {/* Results */}
           <div className="flex-1 min-w-0">
-            {results.length === 0 ? (
+            {isLoading ? (
+              <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
+                <p className="text-2xl animate-spin">⏳</p>
+                <p className="font-display font-bold text-gray-700 text-lg mt-3">
+                  Loading foods...
+                </p>
+              </div>
+            ) : isError ? (
+              <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
+                <p className="text-4xl mb-3">⚠️</p>
+                <p className="font-display font-bold text-gray-700 text-lg">
+                  Error loading foods
+                </p>
+                <p className="text-gray-400 text-sm mt-1">
+                  {error?.message || "Something went wrong"}
+                </p>
+              </div>
+            ) : results.length === 0 ? (
               <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
                 <p className="text-4xl mb-3">🔍</p>
                 <p className="font-display font-bold text-gray-700 text-lg">
@@ -200,7 +219,7 @@ export default function SearchPage() {
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {results.map((food) => (
-                  <FoodCard key={food.id} food={food} />
+                  <FoodCard key={food._id} food={food} />
                 ))}
               </div>
             )}

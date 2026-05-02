@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@/hooks/useAuth";
 import { Button, Input, showToast } from "@/components/ui";
-import { AuthCard } from "@/components/AuthCard";
+import { AuthCard } from "@/components/auth/AuthCard";
 import useResendOTP from "@/hooks/auth/useResendOTP";
 import useVerifyEmail from "@/hooks/auth/useVerifyEmail";
 import toast from "react-hot-toast";

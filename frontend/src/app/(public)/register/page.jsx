@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hooks/useAuth";
 import { registerSchema } from "@/lib/validations";
 import { Button, Input, showToast } from "@/components/ui";
-import { AuthCard } from "@/components/AuthCard";
+import { AuthCard } from "@/components/auth/AuthCard";
 import toast from "react-hot-toast";
 import useRegister from "@/hooks/auth/useRegister";
 import { useRouter } from "next/navigation";

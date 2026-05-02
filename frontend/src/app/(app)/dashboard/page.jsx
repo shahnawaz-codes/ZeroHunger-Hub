@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { Button, PageLoader } from "@/components/ui";
-import { RestaurantPartnerCTA } from "@/components/RestaurantPartnerCTA";
+import { RestaurantPartnerCTA } from "@/components/restaurant/RestaurantPartnerCTA";
 
 export default function DashboardPage() {
   const { userData, isLoading, logout, isAuthenticated } = useAuth();

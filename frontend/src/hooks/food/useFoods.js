@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 const useFoods = () => {
   return useQuery({
     queryKey: ["foods"],
-    queryFn: () => foodService.getFoods(),
+    queryFn: () => foodService.getAllFoods(),
   });
 };
 
