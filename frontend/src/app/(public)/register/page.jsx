@@ -15,8 +15,7 @@ import { useRouter } from "next/navigation";
  * Render the registration page containing a validated signup form.
  *
  * The form validates input against the `registerSchema`, displays field-level
- * validation errors, shows a loading state while submitting, and disables the
- * submit button until the form is valid. On submit, the component calls the
+ * validation errors, shows a loading state while submitting, and disables the submit button until the form is valid. On submit, the component calls the
  * authentication `signup` function with the provided name, email, and password;
  * failures surface an error toast.
  *
@@ -26,7 +25,7 @@ export default function RegisterPage() {
   const { mutate: signup, error } = useRegister();
   const router = useRouter();
   const {
-    register, // register function to track form inputs like name, email, password, confirmPassword
+    register, // register function to track form inputs like name, email, password, confirmPassword its like onChange
     handleSubmit, // function to handle form submission
     formState: { errors, isSubmitting, isValid }, // formState to track validation errors and submission state
   } = useForm({

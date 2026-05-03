@@ -5,18 +5,19 @@ import { MY_ORDERS } from "@/lib/dummy-data";
 const STATUS_CONFIG = {
   ready_for_pickup: {
     label: "Ready for Pickup 🎉",
-    color: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    dot: "bg-emerald-500",
+    color:
+      "bg-feedback-success/10 text-feedback-success border-feedback-success/20",
+    dot: "bg-feedback-success",
   },
   confirmed: {
     label: "Order Confirmed",
-    color: "bg-blue-50 text-blue-700 border-blue-200",
-    dot: "bg-blue-500",
+    color: "bg-feedback-info/10 text-feedback-info border-feedback-info/20",
+    dot: "bg-feedback-info",
   },
   completed: {
     label: "Completed",
-    color: "bg-gray-50 text-gray-600 border-gray-200",
-    dot: "bg-gray-400",
+    color: "bg-neutral-50 text-neutral-600 border-neutral-200",
+    dot: "bg-neutral-400",
   },
 };
 
@@ -35,7 +36,7 @@ function StarRating({ value, onChange }) {
         <button
           key={n}
           onClick={() => onChange(n)}
-          className={`text-xl transition-transform hover:scale-110 ${n <= value ? "text-amber-400" : "text-gray-200"}`}
+          className={`text-xl transition-transform hover:scale-110 ${n <= value ? "text-feedback-warning" : "text-neutral-200"}`}
         >
           ★
         </button>
@@ -82,10 +83,10 @@ function OrderCard({ order, isActive }) {
 
   return (
     <div
-      className={`bg-white rounded-2xl border overflow-hidden shadow-sm ${isActive ? "border-primary-200" : "border-gray-100"}`}
+      className={`bg-white rounded-2xl border overflow-hidden shadow-sm ${isActive ? "border-brand-green-200" : "border-neutral-200"}`}
     >
       {isActive && (
-        <div className="bg-primary-500 px-4 py-1.5 flex items-center justify-between">
+        <div className="bg-brand-green-500 px-4 py-1.5 flex items-center justify-between">
           <span className="text-white text-xs font-bold">
             Active Order · {order.orderId}
           </span>
@@ -109,35 +110,39 @@ function OrderCard({ order, isActive }) {
           className="w-20 h-20 rounded-xl object-cover shrink-0"
         />
         <div className="flex-1 min-w-0">
-          <p className="font-display font-bold text-gray-900 text-sm leading-tight mb-0.5">
+          <p className="font-display font-bold text-neutral-900 text-sm leading-tight mb-0.5">
             {order.foodName}
           </p>
-          <p className="text-xs text-gray-500 mb-1">{order.restaurantName}</p>
-          <p className="text-xs text-gray-400">🕐 {order.pickupSlot}</p>
+          <p className="text-xs text-neutral-500 mb-1">
+            {order.restaurantName}
+          </p>
+          <p className="text-xs text-neutral-400">🕐 {order.pickupSlot}</p>
           {!isActive && (
-            <p className="text-xs text-gray-300 mt-0.5">
+            <p className="text-xs text-neutral-300 mt-0.5">
               {order.date} · {order.orderTime}
             </p>
           )}
         </div>
         <div className="text-right shrink-0">
-          <p className="font-black text-gray-900 text-base">₹{order.price}</p>
-          <p className="text-xs text-emerald-600 font-semibold mt-0.5">
+          <p className="font-black text-neutral-900 text-base">
+            ₹{order.price}
+          </p>
+          <p className="text-xs text-feedback-success font-semibold mt-0.5">
             Saved ₹{order.savings}
           </p>
         </div>
       </div>
 
       {/* Impact row */}
-      <div className="mx-4 mb-4 bg-emerald-50 rounded-xl px-3 py-2 flex items-center gap-3">
+      <div className="mx-4 mb-4 bg-feedback-success/10 rounded-xl px-3 py-2 flex items-center gap-3">
         <span>🌍</span>
-        <p className="text-xs text-emerald-700 font-medium">
+        <p className="text-xs text-feedback-success font-medium">
           You saved <strong>{order.co2Saved}kg CO₂</strong> with this order
         </p>
       </div>
 
       {isActive && order.subStatus === "ready_for_pickup" && (
-        <div className="mx-4 mb-4 bg-gray-900 rounded-xl p-3 text-center">
+        <div className="mx-4 mb-4 bg-surface-dark rounded-xl p-3 text-center">
           <p className="text-white font-black text-2xl tracking-widest">
             {order.orderId}
           </p>
@@ -148,13 +153,13 @@ function OrderCard({ order, isActive }) {
       )}
 
       {isActive && (
-        <div className="border-t border-gray-100 px-4 py-3 flex items-center justify-between">
-          <p className="text-xs text-gray-400">
+        <div className="border-t border-neutral-200 px-4 py-3 flex items-center justify-between">
+          <p className="text-xs text-neutral-400">
             {order.date} · Ordered at {order.orderTime}
           </p>
           <a
             href={`/food/${order.id}`}
-            className="text-xs font-bold text-primary-500 hover:underline"
+            className="text-xs font-bold text-brand-green-500 hover:underline"
           >
             View →
           </a>
@@ -162,13 +167,13 @@ function OrderCard({ order, isActive }) {
       )}
 
       {!isActive && (
-        <div className="border-t border-gray-100 px-4 py-3">
+        <div className="border-t border-neutral-200 px-4 py-3">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold text-gray-500">
+            <p className="text-xs font-semibold text-neutral-500">
               Rate your experience
             </p>
             {rated && (
-              <span className="text-xs text-emerald-600 font-bold">
+              <span className="text-xs text-feedback-success font-bold">
                 Thanks! ✓
               </span>
             )}
@@ -194,17 +199,17 @@ export default function OrdersPage() {
   const totalCO2 = MY_ORDERS.reduce((sum, o) => sum + o.co2Saved, 0).toFixed(1);
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-surface-page">
       <main className="max-w-2xl mx-auto px-4 pb-24 md:pb-8 pt-5">
-        <h1 className="font-display font-black text-2xl text-gray-900 mb-1">
+        <h1 className="font-display font-black text-2xl text-neutral-900 mb-1">
           My Orders
         </h1>
-        <p className="text-sm text-gray-500 mb-5">
+        <p className="text-sm text-neutral-500 mb-5">
           Track pickups and view your impact
         </p>
 
         {/* Impact summary */}
-        <div className="bg-[#111] rounded-2xl p-4 mb-5 grid grid-cols-3 gap-3">
+        <div className="bg-surface-dark rounded-2xl p-4 mb-5 grid grid-cols-3 gap-3">
           <div className="text-center">
             <p className="font-display font-black text-white text-xl">
               {MY_ORDERS.length}
@@ -214,7 +219,7 @@ export default function OrdersPage() {
             </p>
           </div>
           <div className="text-center border-x border-white/10">
-            <p className="font-display font-black text-primary-400 text-xl">
+            <p className="font-display font-black text-brand-green-400 text-xl">
               ₹{totalSaved}
             </p>
             <p className="text-white/40 text-[10px] font-medium mt-0.5">
@@ -222,7 +227,7 @@ export default function OrdersPage() {
             </p>
           </div>
           <div className="text-center">
-            <p className="font-display font-black text-emerald-400 text-xl">
+            <p className="font-display font-black text-feedback-success text-xl">
               {totalCO2}kg
             </p>
             <p className="text-white/40 text-[10px] font-medium mt-0.5">
@@ -232,19 +237,19 @@ export default function OrdersPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex bg-white rounded-xl border border-gray-100 p-1 mb-5 shadow-sm">
+        <div className="flex bg-white rounded-xl border border-neutral-200 p-1 mb-5 shadow-sm">
           <button
             onClick={() => setTab("active")}
             className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-1.5 ${
               tab === "active"
-                ? "bg-gray-900 text-white"
-                : "text-gray-500 hover:text-gray-700"
+                ? "bg-neutral-900 text-white"
+                : "text-neutral-500 hover:text-neutral-700"
             }`}
           >
             Active
             {active.length > 0 && (
               <span
-                className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${tab === "active" ? "bg-primary-500" : "bg-gray-200 text-gray-600"}`}
+                className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${tab === "active" ? "bg-brand-green-500" : "bg-neutral-200 text-neutral-600"}`}
               >
                 {active.length}
               </span>
@@ -254,8 +259,8 @@ export default function OrdersPage() {
             onClick={() => setTab("history")}
             className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
               tab === "history"
-                ? "bg-gray-900 text-white"
-                : "text-gray-500 hover:text-gray-700"
+                ? "bg-neutral-900 text-white"
+                : "text-neutral-500 hover:text-neutral-700"
             }`}
           >
             History
@@ -266,14 +271,14 @@ export default function OrdersPage() {
         <div className="space-y-3 animate-fade-in">
           {tab === "active" &&
             (active.length === 0 ? (
-              <div className="text-center py-14 bg-white rounded-2xl border border-gray-100">
+              <div className="text-center py-14 bg-white rounded-2xl border border-neutral-200">
                 <p className="text-4xl mb-3">🛍️</p>
-                <p className="font-display font-bold text-gray-700">
+                <p className="font-display font-bold text-neutral-700">
                   No active orders
                 </p>
                 <a
                   href="/"
-                  className="mt-3 inline-block text-sm font-bold text-primary-500"
+                  className="mt-3 inline-block text-sm font-bold text-brand-green-500"
                 >
                   Browse food →
                 </a>
@@ -283,9 +288,9 @@ export default function OrdersPage() {
             ))}
           {tab === "history" &&
             (history.length === 0 ? (
-              <div className="text-center py-14 bg-white rounded-2xl border border-gray-100">
+              <div className="text-center py-14 bg-white rounded-2xl border border-neutral-200">
                 <p className="text-4xl mb-3">📋</p>
-                <p className="font-display font-bold text-gray-700">
+                <p className="font-display font-bold text-neutral-700">
                   No past orders yet
                 </p>
               </div>

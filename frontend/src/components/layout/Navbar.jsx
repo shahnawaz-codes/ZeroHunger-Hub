@@ -25,12 +25,12 @@ export function Navbar() {
   return (
     <>
       {/* Top Nav */}
-      <header className="sticky top-0 z-50 bg-[#111] border-b border-white/10">
+      <header className="sticky top-0 z-50 bg-surface-dark border-b border-white/10">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <span className="text-xl font-display font-black text-white">
-              Zero<span className="text-primary-500">Hunger</span>
+              Zero<span className="text-brand-green-500">Hunger</span>
             </span>
           </Link>
 
@@ -45,7 +45,7 @@ export function Navbar() {
                   href={href}
                   className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
                     active
-                      ? "bg-primary-500 text-white"
+                      ? "bg-brand-green-500 text-white"
                       : "text-white/60 hover:text-white hover:bg-white/10"
                   }`}
                 >
@@ -62,7 +62,7 @@ export function Navbar() {
               <span>Ahmedabad</span>
               <ChevronIcon />
             </button>
-            <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs font-bold">
+            <div className="w-8 h-8 rounded-full bg-brand-green-500 flex items-center justify-center text-white text-xs font-bold">
               SR
             </div>
           </div>
@@ -70,7 +70,7 @@ export function Navbar() {
       </header>
 
       {/* Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#111] border-t border-white/10 pb-safe">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface-dark border-t border-white/10 pb-safe">
         <div className="grid grid-cols-4 h-16">
           {navItems.map(({ href, label, icon: Icon }) => {
             const active =
@@ -80,7 +80,7 @@ export function Navbar() {
                 key={href}
                 href={href}
                 className={`flex flex-col items-center justify-center gap-0.5 transition-colors ${
-                  active ? "text-primary-500" : "text-white/40"
+                  active ? "text-brand-green-500" : "text-white/40"
                 }`}
               >
                 <Icon size={active ? 22 : 20} />

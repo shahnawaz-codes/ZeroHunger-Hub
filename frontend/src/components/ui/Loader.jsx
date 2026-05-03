@@ -1,4 +1,4 @@
-export function Loader2({ className = '', ...props }) {
+export function Loader2({ className = "", ...props }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -20,8 +20,8 @@ export function Loader2({ className = '', ...props }) {
 
 export function PageLoader() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
+    <div className="min-h-screen flex items-center justify-center bg-surface-page">
+      <Loader2 className="h-8 w-8 animate-spin text-brand-green-600" />
     </div>
   );
 }
