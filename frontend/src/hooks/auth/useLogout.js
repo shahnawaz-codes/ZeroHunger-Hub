@@ -1,11 +1,12 @@
 import { authService } from "@/modules/auth/auth.service";
 import { useMutation } from "@tanstack/react-query";
+import { showToast } from "@/components/ui";
 
 const useLogout = () => {
   return useMutation({
     mutationFn: () => authService.logout(),
     onSuccess: () => {
-      toast.success("Logout successful!");
+      showToast.success("Logout successful!");
     },
   });
 };

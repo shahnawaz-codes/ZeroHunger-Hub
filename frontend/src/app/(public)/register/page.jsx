@@ -3,11 +3,9 @@
 import { useForm } from "react-hook-form";
 // zod resolver for react-hook-form + zod schemas
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "@/hooks/useAuth";
 import { registerSchema } from "@/lib/validations";
 import { Button, Input, showToast } from "@/components/ui";
 import { AuthCard } from "@/components/auth/AuthCard";
-import toast from "react-hot-toast";
 import useRegister from "@/hooks/auth/useRegister";
 import { useRouter } from "next/navigation";
 
@@ -46,7 +44,7 @@ export default function RegisterPage() {
             `/verify-email?email=${encodeURIComponent(variables.email)}`,
           );
         }, 1000);
-        toast.success(
+        showToast.success(
           "Registration successful! Please check your email for verification.",
         );
       },

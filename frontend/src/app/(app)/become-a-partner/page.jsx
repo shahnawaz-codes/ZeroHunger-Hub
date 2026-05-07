@@ -6,7 +6,6 @@ import { restaurantSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 
 export default function BecomePartnerPage() {
   const router = useRouter();

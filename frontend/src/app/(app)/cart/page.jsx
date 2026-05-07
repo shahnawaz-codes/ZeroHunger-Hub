@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useCartStore from "@/store/useCartStore";
 import { showToast } from "@/components/ui";
-import Link from "next/link";
-import { shallow } from "zustand/shallow";
 import { useCountdown } from "@/utils/countdown";
 import { CartItem } from "@/components/cart/CartItem";
 import { EmptyCart } from "@/components/cart/EmptyCart";
@@ -18,14 +16,13 @@ export default function CartPage() {
   const setQuantity = useCartStore((s) => s.setQuantity);
   const removeItem = useCartStore((s) => s.removeItem);
   const clearCart = useCartStore((s) => s.clearCart);
-  const initializeCart = useCartStore((s) => s.initializeCart, shallow);
 
   const [isOrdering, setIsOrdering] = useState(false);
   const countdown = useCountdown(expiryAt);
 
   useEffect(() => {
-    initializeCart();
-  }, [initializeCart]);
+    useCartStore.getState().initializeCart();
+  }, []);
 
   // If cart expired, clear it
   useEffect(() => {

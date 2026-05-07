@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import toast from "react-hot-toast";
+import { showToast } from "@/components/ui";
 import {
   RESTAURANT_STATS,
   RESTAURANT_LISTINGS,
@@ -211,13 +211,13 @@ function ListingsTab({ listings, onAdd }) {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => toast.success("Edit mode")}
+                  onClick={() => showToast.success("Edit mode")}
                   className="text-xs font-bold text-neutral-500 hover:text-neutral-700 px-2 py-1 hover:bg-neutral-200 rounded-lg transition-colors"
                 >
                   Edit
                 </button>
                 <button
-                  onClick={() => toast.error("Listing removed")}
+                  onClick={() => showToast.error("Listing removed")}
                   className="text-xs font-bold text-feedback-error hover:opacity-75 px-2 py-1 hover:bg-feedback-error/10 rounded-lg transition-colors"
                 >
                   Remove
@@ -360,16 +360,16 @@ function AddFoodTab({ onSuccess }) {
       !form.quantity ||
       !form.pickupStart
     ) {
-      toast.error("Please fill all required fields");
+      showToast.error("Please fill all required fields");
       return;
     }
     if (+form.discountedPrice >= +form.originalPrice) {
-      toast.error("Discounted price must be lower than original");
+      showToast.error("Discounted price must be lower than original");
       return;
     }
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 1000));
-    toast.success("🎉 Listing published! Users can now see it.");
+    showToast.success("🎉 Listing published! Users can now see it.");
     onSuccess();
     setSubmitting(false);
   };

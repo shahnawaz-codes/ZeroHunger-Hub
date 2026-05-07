@@ -2,7 +2,7 @@
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { showToast } from "@/components/ui";
 import useFood from "@/hooks/food/useFood";
 import useCartStore from "@/store/useCartStore";
 
@@ -97,14 +97,17 @@ export default function FoodDetailPage({ params }) {
   const quantityLeft = quantity.left;
   const quantityTotal = quantity.total;
   const isOutOfStock = quantityLeft <= 0;
-  const isExpired = new Date(expiryTime) <= Date.now();
-
-  const urgency = getUrgency(food.expiryTime);
+  const expiryDate = new Date(expiryTime);
+  const isExpired =
+    !expiryTime ||
+    isNaN(expiryDate.getTime()) ||
+    expiryDate.getTime() <= Date.now();
+  const urgency = getUrgency(expiryTime);
   const discount = Math.round((1 - discountedPrice / originalPrice) * 100);
 
   const handleCartReserve = async () => {
     if (!selectedSlot) {
-      toast.error("Please select a pickup slot first");
+      showToast.error("Please select a pickup slot first");
       return;
     }
     setOrdering(true);
@@ -116,7 +119,7 @@ export default function FoodDetailPage({ params }) {
     };
     addItem(item, selectedSlot, food.restaurant._id);
     await new Promise((r) => setTimeout(r, 1200));
-    toast.success("🎉 Added item in cart, Check It Out!!");
+    showToast.success("🎉 Added item in cart, Check It Out!!");
     router.push("/cart");
   };
 

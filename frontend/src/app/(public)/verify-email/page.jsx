@@ -1,16 +1,14 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useAuth } from "@/hooks/useAuth";
 import { Button, Input, showToast } from "@/components/ui";
 import { AuthCard } from "@/components/auth/AuthCard";
 import useResendOTP from "@/hooks/auth/useResendOTP";
 import useVerifyEmail from "@/hooks/auth/useVerifyEmail";
-import toast from "react-hot-toast";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +20,6 @@ const verifySchema = z.object({
 });
 
 function VerifyContent() {
-  // const { verifyEmail, resendOtp } = useAuth();
   const { mutate: resendOtp } = useResendOTP();
   const { mutate: verifyEmail } = useVerifyEmail();
   const searchParams = useSearchParams();
@@ -100,7 +97,7 @@ function VerifyContent() {
     try {
       resendOtp(email, {
         onSuccess: () => {
-          toast.success("OTP resent successfully");
+          showToast.success("OTP resent successfully");
         },
       });
       setTimer(300);

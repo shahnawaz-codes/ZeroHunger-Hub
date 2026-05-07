@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { showToast } from "@/components/ui";
 import { authService } from "@/modules/auth/auth.service";
 import { userService } from "@/modules/user/user.service";
 
@@ -33,7 +33,7 @@ export const useAuth = () => {
     async (name, email, password) => {
       try {
         await authService.register(name, email, password);
-        toast.success(
+        showToast.success(
           "Registration successful! Check your email for verification code.",
         );
         sessionStorage.setItem("pendingVerification", email);
@@ -41,7 +41,7 @@ export const useAuth = () => {
           router.push(`/verify-email?email=${encodeURIComponent(email)}`);
         }, 1000);
       } catch (error) {
-        toast.error(error.message || "Registration failed");
+        showToast.error(error.message || "Registration failed");
         throw error;
       }
     },
@@ -69,7 +69,7 @@ export const useAuth = () => {
         await fetchUser();
         router.push(redirect);
       } catch (error) {
-        toast.error(error.message || "Login failed");
+        showToast.error(error.message || "Login failed");
         throw error;
       }
     },
@@ -83,7 +83,7 @@ export const useAuth = () => {
         await fetchUser();
         router.push(redirect);
       } catch (error) {
-        toast.error(error.message || "Verification failed");
+        showToast.error(error.message || "Verification failed");
         throw error;
       }
     },
@@ -93,9 +93,8 @@ export const useAuth = () => {
   const resendOtp = useCallback(async (email) => {
     try {
       await authService.resendOtp(email);
-     
     } catch (error) {
-      toast.error(error.message || "Failed to resend OTP");
+      showToast.error(error.message || "Failed to resend OTP");
       throw error;
     }
   }, []);
@@ -106,7 +105,7 @@ export const useAuth = () => {
       setUserData(null);
       router.push("/login");
     } catch (error) {
-      toast.error(error.message || "Logout failed");
+      showToast.error(error.message || "Logout failed");
     }
   }, [router]);
   return {

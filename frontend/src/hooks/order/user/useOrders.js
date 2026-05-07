@@ -1,10 +1,11 @@
 import { orderService } from "@/modules/order/order.service";
 import { useQuery } from "@tanstack/react-query";
 
-export default useOrders = () => {
+const useOrders = () => {
   return useQuery({
     queryKey: ["orders"],
     queryFn: () => orderService.myAllOrders(),
   });
 };
-b
+
+export default useOrders;
