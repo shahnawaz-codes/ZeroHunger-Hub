@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "@/hooks/useAuth";
 import { loginSchema } from "@/lib/validations";
 import { Button, Input, showToast } from "@/components/ui";
 import { AuthCard } from "@/components/auth/AuthCard";

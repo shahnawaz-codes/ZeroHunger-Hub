@@ -12,11 +12,11 @@ export const orderService = {
     return handleResponse(res);
   },
   orderById: async (orderId) => {
-    const res = await api.get(`/orders${orderId}`);
+    const res = await api.get(`/orders/${orderId}`);
     return handleResponse(res);
   },
   cancelOrder: async (orderId) => {
-    const res = await api.patch(`/orders${orderId}/cancel`);
+    const res = await api.patch(`/orders/${orderId}/cancel`);
     return handleResponse(res);
   },
   // -----------------private (restaurant)------------------
@@ -25,19 +25,19 @@ export const orderService = {
     return handleResponse(res);
   },
   cancelOrderByrestaurant: async (orderId) => {
-    const res = await api.patch(`/restaurants/orders${orderId}/cancel`);
+    const res = await api.patch(`/restaurants/orders/${orderId}/cancel`);
     return handleResponse(res);
   },
   confirmOrder: async (orderId) => {
-    const res = await api.patch(`/restaurants/orders${orderId}/confirm`);
+    const res = await api.patch(`/restaurants/orders/${orderId}/confirm`);
     return handleResponse(res);
   },
   readyOrder: async (orderId) => {
-    const res = await api.patch(`/restaurants/orders${orderId}/ready`);
+    const res = await api.patch(`/restaurants/orders/${orderId}/ready`);
     return handleResponse(res);
   },
   completeOrder: async (orderId) => {
-    const res = api.patch(`/restaurants/orders${orderId}/complete`);
+    const res = api.patch(`/restaurants/orders/${orderId}/complete`);
     return handleResponse(res);
   },
 };

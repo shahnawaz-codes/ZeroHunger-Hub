@@ -3,11 +3,9 @@
 import { useForm } from "react-hook-form";
 // zod resolver for react-hook-form + zod schemas
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "@/hooks/useAuth";
 import { registerSchema } from "@/lib/validations";
 import { Button, Input, showToast } from "@/components/ui";
 import { AuthCard } from "@/components/auth/AuthCard";
-import toast from "react-hot-toast";
 import useRegister from "@/hooks/auth/useRegister";
 import { useRouter } from "next/navigation";
 
@@ -15,8 +13,7 @@ import { useRouter } from "next/navigation";
  * Render the registration page containing a validated signup form.
  *
  * The form validates input against the `registerSchema`, displays field-level
- * validation errors, shows a loading state while submitting, and disables the
- * submit button until the form is valid. On submit, the component calls the
+ * validation errors, shows a loading state while submitting, and disables the submit button until the form is valid. On submit, the component calls the
  * authentication `signup` function with the provided name, email, and password;
  * failures surface an error toast.
  *
@@ -26,7 +23,7 @@ export default function RegisterPage() {
   const { mutate: signup, error } = useRegister();
   const router = useRouter();
   const {
-    register, // register function to track form inputs like name, email, password, confirmPassword
+    register, // register function to track form inputs like name, email, password, confirmPassword its like onChange
     handleSubmit, // function to handle form submission
     formState: { errors, isSubmitting, isValid }, // formState to track validation errors and submission state
   } = useForm({
@@ -47,7 +44,7 @@ export default function RegisterPage() {
             `/verify-email?email=${encodeURIComponent(variables.email)}`,
           );
         }, 1000);
-        toast.success(
+        showToast.success(
           "Registration successful! Please check your email for verification.",
         );
       },

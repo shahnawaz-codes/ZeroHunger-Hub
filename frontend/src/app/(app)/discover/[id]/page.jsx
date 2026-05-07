@@ -2,7 +2,7 @@
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { showToast } from "@/components/ui";
 import useFood from "@/hooks/food/useFood";
 import useCartStore from "@/store/useCartStore";
 
@@ -84,19 +84,30 @@ export default function FoodDetailPage({ params }) {
     );
   }
   // Destructure from actual API shape
-  const { pricing, quantity, restaurant, pickupSlots = [], tags = [] } = food;
+  const {
+    pricing,
+    quantity,
+    restaurant,
+    pickupSlots = [],
+    tags = [],
+    expiryTime,
+  } = food;
   const discountedPrice = pricing.discounted;
   const originalPrice = pricing.original;
   const quantityLeft = quantity.left;
   const quantityTotal = quantity.total;
   const isOutOfStock = quantityLeft <= 0;
-
-  const urgency = getUrgency(food.expiryTime);
+  const expiryDate = new Date(expiryTime);
+  const isExpired =
+    !expiryTime ||
+    isNaN(expiryDate.getTime()) ||
+    expiryDate.getTime() <= Date.now();
+  const urgency = getUrgency(expiryTime);
   const discount = Math.round((1 - discountedPrice / originalPrice) * 100);
 
   const handleCartReserve = async () => {
     if (!selectedSlot) {
-      toast.error("Please select a pickup slot first");
+      showToast.error("Please select a pickup slot first");
       return;
     }
     setOrdering(true);
@@ -108,7 +119,7 @@ export default function FoodDetailPage({ params }) {
     };
     addItem(item, selectedSlot, food.restaurant._id);
     await new Promise((r) => setTimeout(r, 1200));
-    toast.success("🎉 Added item in cart, Check It Out!!");
+    showToast.success("🎉 Added item in cart, Check It Out!!");
     router.push("/cart");
   };
 
@@ -272,12 +283,15 @@ export default function FoodDetailPage({ params }) {
         <div className="fixed bottom-16 md:bottom-0 left-0 right-0 md:static md:px-4 px-4 pb-3 md:pb-6 bg-cream/95 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none pt-2">
           <button
             onClick={() => handleCartReserve()}
-            disabled={ordering || isOutOfStock}
-            className={`w-full py-4 rounded-2xl font-display font-black text-base flex items-center justify-center gap-2 transition-all ${
-              isOutOfStock
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-brand-green text-white hover:bg-brand-green-dark shadow-lg shadow-brand-green/30 active:scale-[0.98]"
-            }`}
+            disabled={ordering || isOutOfStock || isExpired}
+            className={`w-full py-4 rounded-2xl font-sans font-black text-base
+              bg-brand-orange-500
+               flex items-center justify-center gap-2 transition-all 
+               hover:bg-brand-orange-600/70 hover:shadow-lg hover:shadow-brand-orange-500/30 active:scale-[0.98]${
+                 isOutOfStock || isExpired
+                   ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                   : "bg-brand-green text-white hover:bg-brand-green-dark shadow-lg shadow-brand-green/30 active:scale-[0.98]"
+               }`}
           >
             {ordering ? (
               <>
@@ -285,6 +299,8 @@ export default function FoodDetailPage({ params }) {
               </>
             ) : isOutOfStock ? (
               "Sold Out"
+            ) : isExpired ? (
+              "Expired"
             ) : (
               <>Add to Cart ₹{discountedPrice}</>
             )}

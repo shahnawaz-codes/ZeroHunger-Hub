@@ -17,8 +17,6 @@ import useFoods from "@/hooks/food/useFoods";
 export default function DiscoverPage() {
   const [showFilters, setShowFilters] = useState(false);
   const { data: results = [], isLoading, isError, error } = useFoods();
-  console.log("results", results);
-  if (isError) console.error("error", error);
   const activeFiltersCount = 4;
   const clearFilters = () => {
     setShowFilters(false);

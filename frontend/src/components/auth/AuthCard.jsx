@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 /**
  * Render an authentication page layout with a centered card, header, and footer.
@@ -21,26 +21,32 @@ export function AuthCard({
   children,
 }) {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-white px-4 py-12">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-green-50 to-white px-4 py-12">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block text-2xl font-bold text-primary-600 mb-2">
+          <Link
+            href="/"
+            className="inline-block text-2xl font-bold text-brand-green-600 mb-2"
+          >
             Zero Hunger
           </Link>
-          <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
-          <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
+          <h1 className="text-2xl font-semibold text-neutral-900">{title}</h1>
+          <p className="text-sm text-neutral-500 mt-1">{subtitle}</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-8">
+        <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm p-8">
           {children}
         </div>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-500 mt-6">
-          {footerText}{' '}
-          <Link href={footerLinkHref} className="text-primary-600 font-medium hover:underline">
+        <p className="text-center text-sm text-neutral-500 mt-6">
+          {footerText}{" "}
+          <Link
+            href={footerLinkHref}
+            className="text-brand-green-600 font-medium hover:underline"
+          >
             {footerLinkLabel}
           </Link>
         </p>

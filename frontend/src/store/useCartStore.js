@@ -18,6 +18,13 @@ const useCartStore = create(
         if (slot && restaurantId) {
           if (!validateCart(pickupSlot, restId)) return;
         }
+        if (!slot && !restaurantId) {
+          set({
+            expiryAt: Date.now() + 10 * 60 * 1000, // 10 min
+            slot: pickupSlot,
+            restaurantId: restId,
+          });
+        }
         // if item is already exist then increment qnty +1
         const isExist = items.find(
           (cartItem) => cartItem.foodId == newItem.foodId,
@@ -36,13 +43,6 @@ const useCartStore = create(
           set((state) => ({
             items: [...state.items, { ...newItem, quantity: 1 }],
           }));
-        }
-        if (!slot && !restaurantId) {
-          set({
-            slot: pickupSlot,
-            restaurantId: restId,
-            expiryAt: Date.now() + 10 * 60 * 1000, // 10 min
-          });
         }
       },
       removeItem: (foodId) => {

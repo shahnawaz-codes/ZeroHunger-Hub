@@ -3,16 +3,16 @@ import { Loader2 } from "./Loader";
 
 const variantClasses = {
   primary:
-    "bg-brand-green text-white hover:bg-brand-green-dark focus:ring-brand-green disabled:bg-brand-green-light",
+    "bg-brand-green-500 text-white hover:bg-brand-green-600 focus:ring-brand-green-500 disabled:opacity-50",
 
   secondary:
-    "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-gray-300 disabled:opacity-50",
+    "bg-white text-neutral-700 border border-neutral-200 hover:bg-neutral-50 focus:ring-neutral-300 disabled:opacity-50",
 
   ghost:
-    "text-gray-600 hover:bg-gray-100 focus:ring-gray-300 disabled:opacity-50",
+    "text-neutral-600 hover:bg-neutral-100 focus:ring-neutral-300 disabled:opacity-50",
 
   danger:
-    "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 disabled:bg-red-300",
+    "bg-feedback-error text-white hover:opacity-90 focus:ring-feedback-error disabled:opacity-50",
 };
 const sizeClasses = {
   sm: "px-3 py-1.5 text-sm",
