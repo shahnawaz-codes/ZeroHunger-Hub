@@ -1,7 +1,7 @@
 import RoleGuard from "@/components/guard/roleGuard";
 import { Navbar } from "@/components/layout/Navbar";
 export const metadata = {
-  title: "ZeroHunger — Find discounted food",
+  title: "ZeroHunger — Find discounted bag",
   description: "Browse surplus meals from restaurants near you",
 };
 export default function AppLayout({ children }) {

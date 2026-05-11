@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const foodSchema = new mongoose.Schema(
+const bagSchema = new mongoose.Schema(
   {
     restaurant: {
       type: mongoose.Schema.Types.ObjectId,
@@ -13,26 +13,29 @@ const foodSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, "Description is required."],
     },
     category: {
       type: String,
       default: "other",
     },
-
     pricing: {
       original: {
         type: Number,
         required: [true, "Original price is required."],
         min: 0,
       },
+      // discounted price can be zero (free) but not negative, and should be less than or equal to original price
       discounted: {
         type: Number,
         default: 0,
         min: 0,
         validate: {
           validator: function (val) {
-            return val <= this.original; // can be less than or equal
+            const original = this.pricing?.original;
+            if (original == undefined || original == null) {
+              return true; // if original price is not set, skip this validation (other validation will catch missing original price)
+            }
+            return val <= original; // can be less than or equal
           },
           message: "Discounted price cannot exceed original price",
         },
@@ -50,12 +53,10 @@ const foodSchema = new mongoose.Schema(
       },
     },
 
-    pickupSlots: [
-      {
-        start: Date,
-        end: Date,
-      },
-    ],
+    pickupWindow: {
+      start: Date,
+      end: Date,
+    },
 
     expiryTime: Date,
 
@@ -65,11 +66,11 @@ const foodSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["active", "sold_out", "expired"],
+      enum: ["active", "paused", "sold_out", "expired"],
       default: "active",
     },
   },
   { timestamps: true },
 );
 
-module.exports = mongoose.model("Food", foodSchema);
+module.exports = mongoose.model("Bag", bagSchema);

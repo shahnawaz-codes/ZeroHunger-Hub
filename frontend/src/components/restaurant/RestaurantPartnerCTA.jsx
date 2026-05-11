@@ -29,7 +29,7 @@ export function RestaurantPartnerCTA() {
             style={{ fontFamily: "Syne, sans-serif", fontWeight: 800 }}
             className="text-xl text-neutral-900 leading-tight mb-2 tracking-tight"
           >
-            Turn unsold food into revenue
+            Turn unsold bag into revenue
           </h2>
           <p className="text-sm text-neutral-500 leading-relaxed mb-4">
             List surplus meals at a discount. Reach nearby customers before
@@ -66,7 +66,7 @@ export function RestaurantPartnerCTA() {
 
           <p className="text-[11px] text-neutral-400 mt-3 leading-relaxed">
             Takes 2 minutes. Your account upgrades instantly — no admin approval
-            to list food.
+            to list bag.
           </p>
         </div>
       </div>

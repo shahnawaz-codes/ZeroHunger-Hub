@@ -17,14 +17,14 @@ const {
  * @access Private (user)
  */
 const handleCreateOrder = asyncHandler(async (req, res) => {
-  const { items, pickupSlot } = req.body;
-  const order = await createOrder(items, pickupSlot, req.user._id);
+  const { item, pickupWindow } = req.body;
+  const order = await createOrder(item, pickupWindow, req.user._id);
   res.status(201).json({ success: true, data: order });
 });
 /**
  * get /api/orders/my
  * @desc Get all orders of the logged-in user
- * @access Private (user
+ * @access Private (user)
  */
 const handleGetMyOrders = asyncHandler(async (req, res) => {
   const orders = await myOrders(req.user._id);

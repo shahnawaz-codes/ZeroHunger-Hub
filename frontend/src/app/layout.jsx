@@ -5,7 +5,7 @@ import Providers from "./providers";
 
 export const metadata = {
   title: "ZeroHunger",
-  description: "Food Waste Reduction App",
+  description: "bag Waste Reduction App",
 };
 
 export default function RootLayout({ children }) {

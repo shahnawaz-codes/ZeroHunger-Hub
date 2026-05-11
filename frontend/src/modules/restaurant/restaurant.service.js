@@ -4,10 +4,10 @@ import { handleResponse } from "@/utils/handleApiRes";
 export const restaurantService = {
   async createRestaurant(data) {
     let res = await api.post("/restaurants", data);
-    handleResponse(res);
+    return handleResponse(res);
   },
   async myRestaurant() {
     let res = await api.get("/restaurants/me");
-    handleResponse(res);
+    return handleResponse(res);
   },
 };

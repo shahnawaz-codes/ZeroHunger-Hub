@@ -2,19 +2,26 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
 import { Button, PageLoader } from "@/components/ui";
 import { RestaurantPartnerCTA } from "@/components/restaurant/RestaurantPartnerCTA";
+import useMe from "@/hooks/user/useMe";
+import useLogout from "@/hooks/auth/useLogout";
 
 export default function DashboardPage() {
-  const { userData, isLoading, logout, isAuthenticated } = useAuth();
+  const { data: userData, isLoading } = useMe();
+  const { mutate: logout } = useLogout();
   const router = useRouter();
 
   // Client-side guard (middleware is primary guard)
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) router.replace("/login");
-  }, [isLoading, isAuthenticated, router]);
+    if (!isLoading && !userData) router.replace("/login");
+  }, [isLoading, userData, router]);
 
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => router.replace("/login"),
+    });
+  };
   if (isLoading || !userData) return <PageLoader />;
 
   return (
@@ -27,7 +34,8 @@ export default function DashboardPage() {
             Hello,{" "}
             <span className="font-medium text-gray-900">{userData.name}</span>
           </span>
-          <Button variant="secondary" size="sm" onClick={logout}>
+          <Button variant="secondary" size="sm" onClick={handleLogout}>
+            {" "}
             Sign Out
           </Button>
         </div>

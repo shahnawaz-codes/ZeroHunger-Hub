@@ -14,14 +14,14 @@ export function EmptyCart() {
         Cart is empty
       </h2>
       <p className="text-white/40 text-sm mb-8 max-w-xs leading-relaxed">
-        You haven't added any food yet. Browse deals near you and rescue a meal.
+        You haven't added any bag yet. Browse deals near you and rescue a meal.
       </p>
       <Link
         href="/discover"
         className="px-6 py-3 rounded-xl bg-brand-green text-white font-bold text-sm hover:opacity-90 transition-opacity"
         style={{ fontFamily: "Syne, sans-serif" }}
       >
-        Browse food deals →
+        Browse bag deals →
       </Link>
     </div>
   );

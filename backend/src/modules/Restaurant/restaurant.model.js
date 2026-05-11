@@ -5,7 +5,6 @@ const restaurantSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       unique: true,
-      index: true,
     },
     name: {
       type: String,
@@ -13,10 +12,17 @@ const restaurantSchema = new mongoose.Schema(
       trim: true,
       maxlength: [30, "Name must be at most 30 characters."],
     },
+    location: {
+      type: { type: String, default: "Point", enum: ["Point"] },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        required: [true, "Coordinates are required."],
+      },
+    },
     address: {
-      type: String,
-      required: [true, "Address is required."],
-      trim: true,
+      street: String,
+      city: String,
+      pincode: String,
     },
     cuisine: {
       type: String,
@@ -31,5 +37,7 @@ const restaurantSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+restaurantSchema.index({ location: "2dsphere" }); // for geospatial queries (like finding nearby restaurants)
 
 module.exports = mongoose.model("Restaurant", restaurantSchema);

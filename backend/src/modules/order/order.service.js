@@ -1,101 +1,69 @@
 const AppError = require("../../utils/AppError");
 const updateOrderStatus = require("../../utils/orderStatusHandler");
-const Food = require("../food/food.model");
+const Bag = require("../bag/bag.model");
 const Order = require("./order.model");
 
-const createOrder = async (selectedFoods, pickupSlot, userId) => {
-  // Validate selectedFoods is a non-empty array
-  if (!Array.isArray(selectedFoods)) {
-    throw new AppError("selectedFoods must be an array", 400);
+const createOrder = async (selectedbag, pickupWindow, userId) => {
+  const { bagId, quantity } = selectedbag;
+  // Validate bagId is present
+  if (!bagId) {
+    throw new AppError("bagId is required", 400);
   }
-  if (!Array.isArray(selectedFoods) || selectedFoods.length === 0) {
-    throw new AppError("selectedFoods must contain at least one item", 400);
-  }
-
-  // Validate each item has valid foodId and positive quantity
-  const hasValidFoods = selectedFoods.every(
-    (item) =>
-      item.foodId || Number.isInteger(item.quantity) || item.quantity > 0,
-  );
-  if (!hasValidFoods) {
+  const isValidQuantity =
+    quantity && Number.isInteger(quantity) && quantity > 0 && quantity <= 2;
+  if (!isValidQuantity) {
     throw new AppError(
-      "selectedFoods must have valid foodId and quantity",
+      "quantity must be a positive integer between 1 and 2",
       400,
     );
   }
-
   // Validate pickupSlot exists
-  if (!pickupSlot) {
-    throw new AppError("pickupSlot is required", 400);
+  if (!pickupWindow) {
+    throw new AppError("pickupWindow is required", 400);
+  }
+  // Validate pickupWindow.start and pickupWindow.end are present
+  else if (!pickupWindow.start || !pickupWindow.end) {
+    throw new AppError("pickupWindow must have both start and end times", 400);
   }
 
-  // Validate pickupSlot.start and pickupSlot.end are present
-  if (!pickupSlot.start || !pickupSlot.end) {
-    throw new AppError("pickupSlot must have both start and end times", 400);
+  // Validate pickupWindow dates are parseable
+  // these two convert into millisecodns
+  const startTime = new Date(pickupWindow.start);
+  const endTime = new Date(pickupWindow.end);
+  if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
+    throw new AppError("start and end time must be a valid date", 400);
   }
-
-  // Validate pickupSlot dates are parseable
-  const startTime = new Date(pickupSlot.start);
-  const endTime = new Date(pickupSlot.end);
-  if (isNaN(startTime.getTime())) {
-    throw new AppError("pickupSlot.start must be a valid date", 400);
-  }
-  if (isNaN(endTime.getTime())) {
-    throw new AppError("pickupSlot.end must be a valid date", 400);
-  }
-
   // Validate start < end and start is not in the past
   if (startTime >= endTime) {
-    throw new AppError("pickupSlot.start must be before pickupSlot.end", 400);
+    throw new AppError(
+      "invalid time range -> start time must be before end time",
+      400,
+    );
   }
-  if (startTime < new Date()) {
-    throw new AppError("pickupSlot.start cannot be in the past", 400);
+  if (endTime < new Date()) {
+    throw new AppError("bag is expired", 400);
+    // TODO : update bag status
   }
 
-  /**  get foodids to fetch foods data in just one db query*/
-  const foodIds = selectedFoods.map((i) => i.foodId);
-
-  // get all foods that user select
-  const foods = await Food.find({
-    _id: { $in: foodIds },
-  });
-  //if any id is invalid
-  if (foods.length !== foodIds.length) {
-    throw new AppError("some foods are invalid", 400);
+  const bag = await Bag.findById(bagId);
+  if (!bag) {
+    throw new AppError("bag not found", 404);
   }
-  // create array of object for order's items that user odered
-  const items = foods.map((food) => {
-    // get the each element quantity that requested from user coz db dont know this
-    const quantity = selectedFoods.find((i) => i.foodId == food._id).quantity;
-    return {
-      quantity,
-      food: food._id,
-      //for snapshot
-      name: food.name,
-      price: food.pricing.discounted ?? food.pricing.original, // if discount is null/undefined return original
-    };
-  });
-  //calculate total amount
-  const totalAmount = items.reduce((sum, i) => {
-    return sum + i.price * i.quantity;
-  }, 0);
-
-  const restaurantId = foods[0]?.restaurant; //assuming all food came from same restaurant
-  // check if all items are from same restaurant if not it return false
-  const isSameRestaurant = foods.every(
-    (food) => food.restaurant.toString() === restaurantId.toString(),
-  );
-  if (!restaurantId || !isSameRestaurant) {
-    throw new AppError("all items must be from the same restaurant", 400);
-  }
+  const price = bag.pricing.discounted ?? bag.pricing.original;
+  const item = {
+    bag: bagId,
+    quantity,
+    name: bag.name, // snapshot
+    price, // snapshot
+  };
 
   // Create a new order
   const order = new Order({
     user: userId,
-    restaurant: restaurantId,
-    items,
-    pickupSlot,
-    totalAmount,
+    restaurant: bag.restaurant,
+    item,
+    pickupWindow,
+    totalAmount: price * quantity,
   });
   return await order.save();
 };
@@ -124,7 +92,7 @@ const cancelOrderByUser = async (orderId, userId) => {
   const order = await Order.findById(orderId);
   if (!order) {
     throw new AppError("order not found", 404);
-    /**only one user can cancel who is order this food, nothing else*/
+    /**only one user can cancel who is order this bag, nothing else*/
   } else if (order.user.toString() !== userId.toString()) {
     throw new AppError("you are not authorized to cancel order");
   }

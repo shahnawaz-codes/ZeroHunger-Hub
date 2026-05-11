@@ -18,8 +18,8 @@ function getUrgency(expiryTime) {
   };
 }
 
-export function FoodCard({ food, compact = false }) {
-  const { pricing, quantity, restaurant, expiryTime, tags = [] } = food;
+export function bagCard({ bag, compact = false }) {
+  const { pricing, quantity, restaurant, expiryTime, tags = [] } = bag;
 
   const urgency = getUrgency(expiryTime);
   const discount = Math.round(
@@ -47,7 +47,7 @@ export function FoodCard({ food, compact = false }) {
           <h3
             className={`font-bold text-neutral-900 ${compact ? "text-sm" : "text-base"}`}
           >
-            {food.name}
+            {bag.name}
           </h3>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-xl font-black text-neutral-400">
@@ -63,16 +63,16 @@ export function FoodCard({ food, compact = false }) {
   }
 
   return (
-    <Link href={`/discover/${food._id}`} className="group block">
+    <Link href={`/discover/${bag._id}`} className="group block">
       <div className="bg-white rounded-2xl overflow-hidden shadow-sm card-hover border border-neutral-200">
         {/* Image — no image field in API, use placeholder */}
         <div
           className={`relative overflow-hidden ${compact ? "h-36" : "h-44"} bg-neutral-100`}
         >
-          {food.image ? (
+          {bag.image ? (
             <img
-              src={food.image}
-              alt={food.name}
+              src={bag.image}
+              alt={bag.name}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
@@ -104,9 +104,9 @@ export function FoodCard({ food, compact = false }) {
               {restaurant?.name}
             </span>
             {/* distance not in API — omit rather than show undefined */}
-            {food.distance != null && (
+            {bag.distance != null && (
               <span className="text-xs text-neutral-400 font-medium">
-                {food.distance} km
+                {bag.distance} km
               </span>
             )}
           </div>
@@ -114,7 +114,7 @@ export function FoodCard({ food, compact = false }) {
           <h3
             className={`font-bold text-neutral-900 leading-tight mb-2 ${compact ? "text-sm" : "text-base"}`}
           >
-            {food.name}
+            {bag.name}
           </h3>
 
           {!compact && tags.length > 0 && (

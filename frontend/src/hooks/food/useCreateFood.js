@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { foodService } from "@/modules/food/food.service";
+import { bagService } from "@/modules/bag/bag.service";
 
-const useCreateFood = () => {
+const useCreatebag = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data) => foodService.createFood(data),
+    mutationFn: (data) => bagService.createbag(data),
     onSuccess: () => {
-      queryClient.invalidateQueries(["my-food"]);
+      queryClient.invalidateQueries(["my-bag"]);
     },
   });
 };
 
-export default useCreateFood;
+export default useCreatebag;

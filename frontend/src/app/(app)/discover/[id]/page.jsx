@@ -3,8 +3,7 @@ import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { showToast } from "@/components/ui";
-import useFood from "@/hooks/food/useFood";
-import useCartStore from "@/store/useCartStore";
+import usebag from "@/hooks/bag/usebag";
 
 function getUrgency(expiryTime) {
   const minutes = Math.max(
@@ -31,7 +30,6 @@ function getUrgency(expiryTime) {
     label: m > 0 ? `${h}h ${m}m left` : `${h}h left`,
   };
 }
-
 const formatTime = (time) => {
   return new Date(time).toLocaleTimeString([], {
     hour: "2-digit",
@@ -47,14 +45,13 @@ function formatSlot(slot) {
   return JSON.stringify(slot); // fallback so you can see what keys exist
 }
 
-export default function FoodDetailPage({ params }) {
+export default function bagDetailPage({ params }) {
   const { id } = use(params);
   const router = useRouter();
   // Hooks-------
-  const { data: food, isLoading, isError } = useFood(id);
+  const { data: bag, isLoading, isError } = usebag(id);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [ordering, setOrdering] = useState(false);
-  const addItem = useCartStore((state) => state.addItem);
 
   if (isLoading) {
     return (
@@ -63,7 +60,7 @@ export default function FoodDetailPage({ params }) {
       </div>
     );
   }
-  if (isError || !food) {
+  if (isError || !bag) {
     return (
       <div className="min-h-screen bg-cream flex flex-col">
         <div className="flex-1 flex items-center justify-center text-center p-8">
@@ -91,7 +88,7 @@ export default function FoodDetailPage({ params }) {
     pickupSlots = [],
     tags = [],
     expiryTime,
-  } = food;
+  } = bag;
   const discountedPrice = pricing.discounted;
   const originalPrice = pricing.original;
   const quantityLeft = quantity.left;
@@ -112,12 +109,11 @@ export default function FoodDetailPage({ params }) {
     }
     setOrdering(true);
     const item = {
-      foodId: id,
-      // snapshot of the food at the time of order
-      foodName: food?.name,
+      bagId: id,
+      // snapshot of the bag at the time of order
+      bagName: bag?.name,
       price: discountedPrice,
     };
-    addItem(item, selectedSlot, food.restaurant._id);
     await new Promise((r) => setTimeout(r, 1200));
     showToast.success("🎉 Added item in cart, Check It Out!!");
     router.push("/cart");
@@ -128,10 +124,10 @@ export default function FoodDetailPage({ params }) {
       <main className="max-w-2xl mx-auto pb-32 md:pb-10">
         {/* Hero image */}
         <div className="relative">
-          {food.image ? (
+          {bag.image ? (
             <img
-              src={food.image}
-              alt={food.name}
+              src={bag.image}
+              alt={bag.name}
               className="w-full h-72 md:h-96 object-cover md:rounded-b-3xl"
             />
           ) : (
@@ -183,7 +179,7 @@ export default function FoodDetailPage({ params }) {
 
           {/* Title */}
           <h1 className="font-display font-black text-2xl text-gray-900 mb-2 leading-tight">
-            {food.name}
+            {bag.name}
           </h1>
 
           {/* Tags */}
@@ -201,9 +197,9 @@ export default function FoodDetailPage({ params }) {
           )}
 
           {/* Description */}
-          {food.description && (
+          {bag.description && (
             <p className="text-gray-600 text-sm leading-relaxed mb-5">
-              {food.description}
+              {bag.description}
             </p>
           )}
 

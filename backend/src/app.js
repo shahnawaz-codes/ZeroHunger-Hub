@@ -6,8 +6,8 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./modules/auth/auth.routes");
 const userRoutes = require("./modules/user/user.routes");
 const restaurantRoutes = require("./modules/Restaurant/restaurant.route");
-const foodRoutes = require("./modules/food/food.routes");
-const restaurantFoodRoutes = require("./modules/food/restaurant.food.routes");
+const bagRoutes = require("./modules/bag/bag.routes");
+const restaurantBagRoutes = require("./modules/bag/restaurant.bag.routes");
 const orderRoutes = require("./modules/order/order.routes");
 const restaurantOrderRoutes = require("./modules/order/restaurant.order.routes");
 const { errorHandler, notFound } = require("./middleware/error.middleware");
@@ -22,7 +22,7 @@ const { errorHandler, notFound } = require("./middleware/error.middleware");
  */
 const app = express();
 
-// ── Core Middleware ──────────────────────────────────────────────────────────
+// ── Core Middleware ───────────────────────────────────────────────────────────────
 /**
  * CORS Configuration - allows requests from frontend CLIENT_URL
  * Enables credentials (cookies, authorization headers)
@@ -38,12 +38,12 @@ app.use(cookieParser());
  * JSON body parser - parses application/json bodies
  * Limit set to 10mb for file uploads
  */
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 
 /**
  * URL-encoded parser - parses application/x-www-form-urlencoded bodies
  */
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 /**
  * Morgan HTTP request logger - logs requests in development environment only
@@ -51,7 +51,7 @@ app.use(express.urlencoded({ extended: true }));
  */
 if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
 
-// ── Routes ───────────────────────────────────────────────────────────────────
+// ── Routes ────────────────────────────────────────────────────────────────────────
 
 /**
  * Health check endpoint - returns ok status
@@ -85,49 +85,51 @@ app.use("/api/users", userRoutes);
 /**
  * Restaurant routes - handles restaurant management
  * Routes:
- * - GET    /api/restaurants
+ * - GET    /api/restaurants/me
  * - POST   /api/restaurants
- * - GET    /api/restaurants/:id
- * - PATCH  /api/restaurants/:id
  */
 app.use("/api/restaurants", restaurantRoutes);
 
 /**
- * Food routes - handles food items (user view)
+ * Bag routes - handles bag items (user view)
  * Routes:
- * - GET    /api/foods
- * - GET    /api/foods/:id
+ * - GET    /api/bags
+ * - GET    /api/bags/:id
+ *
  */
-app.use("/api/foods", foodRoutes);
+app.use("/api/bags", bagRoutes);
 
 /**
- * Restaurant food routes - handles food management for restaurants
+ * Restaurant bag routes - handles bag management for restaurants
  * Routes:
- * - POST   /api/restaurants/foods
- * - PATCH  /api/restaurants/foods/:id
- * - DELETE /api/restaurants/foods/:id
+ * - POST   /api/restaurants/bags
+ * - PATCH  /api/restaurants/bags/:id
+ * - DELETE /api/restaurants/bags/:id
  */
-app.use("/api/restaurants/foods", restaurantFoodRoutes);
+app.use("/api/restaurants/bags", restaurantBagRoutes);
 
 /**
- * Order routes - handles customer orders
+ * Order routes - handles order management
  * Routes:
- * - POST   /api/orders
  * - GET    /api/orders
- * - GET    /api/orders/:id
+ * - POST   /api/orders
  * - PATCH  /api/orders/:id
+ * - DELETE /api/orders/:id
  */
 app.use("/api/orders", orderRoutes);
 
 /**
- * Restaurant order routes - handles restaurant order management
+ * Restaurant order routes - handles order management for restaurants
  * Routes:
  * - GET    /api/restaurants/orders
+ * - POST   /api/restaurants/orders
  * - PATCH  /api/restaurants/orders/:id
+ * - DELETE /api/restaurants/orders/:id
  */
 app.use("/api/restaurants/orders", restaurantOrderRoutes);
 
-// ── Error Handling ────────────────────────────────────────────────────────────
+
+// ── Error Handling ──────────────────────────────────────────────────────────────────
 
 /**
  * 404 Not Found handler - catches all unmatched routes

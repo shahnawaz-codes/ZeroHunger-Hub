@@ -1,12 +1,12 @@
-import { foodService } from "@/modules/food/food.service";
+import { bagService } from "@/modules/bag/bag.service";
 import { useQuery } from "@tanstack/react-query";
 
 /// for accessing id we have to pass id in hook and then add it in queryFn and queryKey
-const useFood = (id) => {
+const usebag = (id) => {
   return useQuery({
-    queryKey: ["food", id],
-    queryFn: () => foodService.getFoodById(id),
+    queryKey: ["bag", id],
+    queryFn: () => bagService.getbagById(id),
   });
 };
 
-export default useFood;
+export default usebag;

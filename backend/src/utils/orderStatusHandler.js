@@ -13,7 +13,7 @@ const AppError = require("./AppError");
  *
  * @description
  * Order Lifecycle:
- * 1. pending: Initial state after customer books food
+ * 1. pending: Initial state after customer books Bag
  *    - Can move to: cancelled (customer) or confirmed (restaurant)
  *
  * 2. confirmed: Restaurant has accepted and is preparing order

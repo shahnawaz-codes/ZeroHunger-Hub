@@ -6,50 +6,50 @@ const orderSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-    required: true,
+      required: true,
     },
-
     restaurant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Restaurant",
       required: true,
     },
-
-    items: {
-      type: [
-        {
-          food: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Food",
-            required: true,
-          },
-          name: {
-            type: String,
-            required: true,
-          }, // snapshot
-          price: {
-            type: Number,
-            required: true,
-          }, // snapshot
-          quantity: {
-            type: Number,
-            required: true,
-          },
+    item: {
+      type: {
+        bag: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Bag",
+          required: true,
         },
-      ],
+        quantity: {
+          type: Number,
+          required: true,
+          default: 1,
+          max: 2,
+        },
+        name: {
+          type: String,
+          required: true,
+        }, // snapshot
+        price: {
+          type: Number,
+          required: true,
+        }, // snapshot
+      },
       validate: {
-        validator: (items) => Array.isArray(items) && items.length > 0,
-        message: "Order must contain at least one item",
+        validator: function (val) {
+          return (
+            val.bag && val.name && val.price != null && val.quantity != null
+          );
+        },
+        message: "item must have bag, name, price, and quantity",
       },
     },
-
+    orderCode: String, // "ZH-4821" shown at pickup
     totalAmount: Number,
-
-    pickupSlot: {
+    pickupWindow: {
       start: Date,
       end: Date,
     },
-
     status: {
       type: String,
       enum: [
@@ -61,6 +61,7 @@ const orderSchema = new mongoose.Schema(
       ],
       default: "pending",
     },
+    rating: { type: Number, min: 1, max: 5 }, // post-pickup
   },
   { timestamps: true },
 );

@@ -48,7 +48,7 @@ function StarRating({ value, onChange }) {
 /**
  * Render a single order card displaying order details and controls for active or historical orders.
  *
- * Displays order image, food and restaurant info, pickup slot or order timestamp, price and savings,
+ * Displays order image, bag and restaurant info, pickup slot or order timestamp, price and savings,
  * and CO₂ impact. When `isActive` is true, shows an "Active Order" header, status pill, optional
  * pickup code (for `ready_for_pickup`), and a "View →" link. When `isActive` is false, renders a
  * 1–5 star rating control and a thank-you acknowledgement after rating; rating is kept in local state.
@@ -58,7 +58,7 @@ function StarRating({ value, onChange }) {
  *   - {string} id
  *   - {string} orderId
  *   - {string} image
- *   - {string} foodName
+ *   - {string} bagName
  *   - {string} restaurantName
  *   - {string} pickupSlot
  *   - {string} date
@@ -106,12 +106,12 @@ function OrderCard({ order, isActive }) {
       <div className="p-4 flex gap-3">
         <img
           src={order.image}
-          alt={order.foodName}
+          alt={order.bagName}
           className="w-20 h-20 rounded-xl object-cover shrink-0"
         />
         <div className="flex-1 min-w-0">
           <p className="font-display font-bold text-neutral-900 text-sm leading-tight mb-0.5">
-            {order.foodName}
+            {order.bagName}
           </p>
           <p className="text-xs text-neutral-500 mb-1">
             {order.restaurantName}
@@ -158,7 +158,7 @@ function OrderCard({ order, isActive }) {
             {order.date} · Ordered at {order.orderTime}
           </p>
           <a
-            href={`/food/${order.id}`}
+            href={`/bag/${order.id}`}
             className="text-xs font-bold text-brand-green-500 hover:underline"
           >
             View →
@@ -280,7 +280,7 @@ export default function OrdersPage() {
                   href="/"
                   className="mt-3 inline-block text-sm font-bold text-brand-green-500"
                 >
-                  Browse food →
+                  Browse bag →
                 </a>
               </div>
             ) : (

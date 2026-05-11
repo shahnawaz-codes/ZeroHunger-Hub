@@ -1,11 +1,11 @@
-import { foodService } from "@/modules/food/food.service";
+import { bagService } from "@/modules/bag/bag.service";
 import { useQuery } from "@tanstack/react-query";
 
-const useMyFood = () => {
+const useMybag = () => {
   return useQuery({
-    queryKey: ["my-food"],
-    queryFn: () => foodService.getMyFood(),
+    queryKey: ["my-bag"],
+    queryFn: () => bagService.getMybag(),
   });
 };
 
-export default useMyFood;
+export default useMybag;

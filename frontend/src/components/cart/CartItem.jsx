@@ -9,7 +9,7 @@ export function CartItem({ item, onIncrement, onDecrement, onRemove }) {
       <div className="p-4">
         {/* emoji placeholder since items don't carry image */}
         <div className="flex gap-4 items-start">
-          {/* square food icon box */}
+          {/* square bag icon box */}
           <div className="w-14 h-14 rounded-xl bg-brand-green/10 border border-brand-green/20 flex items-center justify-center text-2xl flex-shrink-0">
             🍱
           </div>
@@ -19,7 +19,7 @@ export function CartItem({ item, onIncrement, onDecrement, onRemove }) {
               className="text-white font-bold text-sm leading-snug truncate pr-6"
               style={{ fontFamily: "Syne, sans-serif" }}
             >
-              {item.foodName}
+              {item.bagName}
             </p>
             <p className="text-white/40 text-[11px] font-medium mt-0.5">
               per item

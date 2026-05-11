@@ -4,7 +4,7 @@ const {
   requireVerified,
   restrictTo,
 } = require("../../middleware/auth.middleware");
-const { MyfoodsHandler, createHandler } = require("./food.controller");
+const { MybagsHandler, createHandler } = require("./bag.controller");
 const {
   attachRestaurant,
   requireRestaurant,
@@ -22,5 +22,9 @@ router.use(
   requireRestaurant, // check if the user is a restaurant
 );
 
-router.route("/").post(createHandler).get(MyfoodsHandler);
+router.route("/").post(createHandler).get(MybagsHandler);
+router.patch("/:bagId", (req, res) => {
+  res.send("update bag");
+});
+
 module.exports = router;

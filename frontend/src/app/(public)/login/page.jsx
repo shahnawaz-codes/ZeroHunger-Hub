@@ -41,7 +41,7 @@ export default function LoginPage() {
         onError: (err) => {
           if (
             err?.code == "EMAIL_NOT_VERIFIED" ||
-            ere.response?.data?.message?.includes("verify")
+            err.response?.data?.message?.includes("verify")
           ) {
             sessionStorage.setItem("pendingVerification", values.email);
             router.push(

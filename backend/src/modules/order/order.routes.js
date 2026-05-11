@@ -18,5 +18,7 @@ router.post("/", handleCreateOrder);
 router.get("/my", handleGetMyOrders);
 router.get("/:orderId", handleGetOrderById);
 router.patch("/:orderId/cancel", cancelOrderByUserHandler);
+// TODO: add rating after pickup
+//  PATCH  /api/orders/:id/rate         → post-pickup rating
 
 module.exports = router;

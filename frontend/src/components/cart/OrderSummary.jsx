@@ -92,7 +92,7 @@ function OrderSummary({ items, slot, onCheckout, isLoading }) {
         <div className="bg-emerald-500/8 border border-emerald-500/15 rounded-xl p-3 mb-5 flex items-center gap-2.5">
           <span className="text-lg">🌍</span>
           <p className="text-emerald-400 text-xs font-medium leading-snug">
-            Saving ~{(subtotal * 0.003).toFixed(1)}kg CO₂ by rescuing this food
+            Saving ~{(subtotal * 0.003).toFixed(1)}kg CO₂ by rescuing this bag
           </p>
         </div>
 

@@ -139,7 +139,7 @@ function OverviewTab({ stats }) {
 }
 
 /**
- * Render the Listings tab showing current food listings and controls to add, edit, or remove items.
+ * Render the Listings tab showing current bag listings and controls to add, edit, or remove items.
  *
  * @param {Object[]} listings - Array of listing objects to display.
  *   Each listing is expected to include: `id`, `name`, `image`, `status` ('active' or other),
@@ -238,7 +238,7 @@ function ListingsTab({ listings, onAdd }) {
  *   - id: unique identifier
  *   - customerName: customer's full name
  *   - status: one of the order status keys (e.g., 'confirmed', 'ready_for_pickup', 'completed')
- *   - foodName: name of the ordered item
+ *   - bagName: name of the ordered item
  *   - pickupSlot: scheduled pickup time/slot
  *   - orderId: merchant-visible order identifier
  *   - price: numeric or string price to display
@@ -301,7 +301,7 @@ function OrdersTab({ orders }) {
                   </span>
                 </div>
                 <p className="text-xs text-neutral-500 truncate">
-                  {order.foodName}
+                  {order.bagName}
                 </p>
                 <p className="text-xs text-neutral-400">
                   🕐 {order.pickupSlot} · {order.orderId}
@@ -322,7 +322,7 @@ function OrdersTab({ orders }) {
 }
 
 /**
- * Renders the "Add Food" tab: a form to create and publish a new food listing.
+ * Renders the "Add bag" tab: a form to create and publish a new bag listing.
  *
  * Validates required fields and that the discounted price is lower than the original,
  * displays toast feedback for errors and success, simulates a short publish delay,
@@ -330,9 +330,9 @@ function OrdersTab({ orders }) {
  *
  * @param {{ onSuccess: function }} props - Component props.
  * @param {function} props.onSuccess - Callback called once the listing is successfully published.
- * @returns {JSX.Element} The Add Food tab form UI.
+ * @returns {JSX.Element} The Add bag tab form UI.
  */
-function AddFoodTab({ onSuccess }) {
+function AddbagTab({ onSuccess }) {
   const [form, setForm] = useState({
     name: "",
     category: "Indian",
@@ -382,7 +382,7 @@ function AddFoodTab({ onSuccess }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-5 animate-fade-in">
       <div>
-        <label className={labelClass}>Food Name *</label>
+        <label className={labelClass}>bag Name *</label>
         <input
           className={inputClass}
           placeholder="e.g. Dal Makhani + 2 Butter Naan"
@@ -489,7 +489,7 @@ function AddFoodTab({ onSuccess }) {
 
       <div className="border-2 border-dashed border-neutral-200 rounded-2xl p-6 text-center">
         <p className="text-2xl mb-1">📸</p>
-        <p className="text-sm font-bold text-neutral-600">Upload food photo</p>
+        <p className="text-sm font-bold text-neutral-600">Upload bag photo</p>
         <p className="text-xs text-neutral-400 mt-0.5">
           Good photos get 3× more orders
         </p>
@@ -519,7 +519,7 @@ function AddFoodTab({ onSuccess }) {
 }
 
 /**
- * Renders the restaurant dashboard with tabbed navigation for Overview, Listings, Orders, and Add Food.
+ * Renders the restaurant dashboard with tabbed navigation for Overview, Listings, Orders, and Add bag.
  *
  * Maintains local tab state to switch views; the Orders tab shows a badge with the count of non-completed orders.
  *
@@ -532,7 +532,7 @@ export default function RestaurantPage() {
     { id: "overview", label: "📊 Overview" },
     { id: "listings", label: "📦 Listings" },
     { id: "orders", label: `🛍️ Orders` },
-    { id: "add", label: "+ Add Food" },
+    { id: "add", label: "+ Add bag" },
   ];
 
   return (
@@ -597,7 +597,7 @@ export default function RestaurantPage() {
           />
         )}
         {tab === "orders" && <OrdersTab orders={RESTAURANT_ORDERS} />}
-        {tab === "add" && <AddFoodTab onSuccess={() => setTab("listings")} />}
+        {tab === "add" && <AddbagTab onSuccess={() => setTab("listings")} />}
       </main>
     </div>
   );

@@ -3,6 +3,10 @@ const AppError = require("../utils/AppError");
 const asyncHandler = require("../utils/asyncHandler");
 
 /**
+ * attachRestaurant → only attaches data
+ * requireRestaurant → only validates access
+ */
+/**
  * Restaurant attachment middleware - queries and attaches restaurant to request.
  * Must be used after protect() middleware to have req.user available.
  *
@@ -54,14 +58,14 @@ const attachRestaurant = asyncHandler(async (req, res, next) => {
  *
  * @description
  * - Checks if req.restaurant exists (must be truthy)
- * - Used for restaurant-only routes (add food, manage orders, etc.)
+ * - Used for restaurant-only routes (add bag, manage orders, etc.)
  * - Prevents restaurants without profiles from accessing restaurant features
  * - Returns 404 "No restaurant profile found" if missing
  *
  * @example
- * // In restaurant food routes
- * router.post('/foods', protect, attachRestaurant, requireRestaurant, createFood);
- * // Only restaurant users with a profile can create food items
+ * // In restaurant bag routes
+ * router.post('/bags', protect, attachRestaurant, requireRestaurant, createBag);
+ * // Only restaurant users with a profile can create bag items
  */
 const requireRestaurant = asyncHandler(async (req, _res, next) => {
   if (!req.restaurant) {
