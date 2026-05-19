@@ -1,11 +1,11 @@
 import { bagService } from "@/modules/bag/bag.service";
 import { useQuery } from "@tanstack/react-query";
 
-const useMybag = () => {
+const useMybags = () => {
   return useQuery({
     queryKey: ["my-bag"],
-    queryFn: () => bagService.getMybag(),
+    queryFn: () => bagService.getMybags(),
   });
 };
 
-export default useMybag;
+export default useMybags;
