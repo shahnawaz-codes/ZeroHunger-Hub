@@ -1,196 +1,280 @@
-"use client";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+// src/components/layout/Navbar.jsx
+'use client';
 
-const navItems = [
-  { href: "/", label: "Home", icon: HomeIcon },
-  { href: "/discover", label: "discover", icon: SearchIcon },
-  { href: "/orders", label: "Orders", icon: BagIcon },
-  { href: "/cart", label: "Cart", icon: StoreIcon },
-];
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState, useCallback } from 'react';
+import useMe from '@/hooks/user/useMe';
 
-/**
- * Render the site's responsive navigation UI with a top header for desktop and a bottom bar for mobile.
- *
- * The header includes the logo, desktop navigation pills with route-aware active styling, and right-side actions;
- * the mobile bar shows icon+label links with the same active logic derived from the current pathname.
- * Active state is computed so the root path (`/`) is active only when the pathname equals `/`, and other items are active when the pathname starts with their `href`.
- *
- * @returns {JSX.Element} The Navbar element containing the desktop header and mobile bottom navigation.
- */
-export function Navbar() {
-  const pathname = usePathname();
-  const isRestaurant = pathname.startsWith("/restaurant");
+// Pages where navbar should start transparent (has hero behind it)
+const TRANSPARENT_ROUTES = ['/'];
 
+// Logo SVG — leaf mark matching ZeroHunger brand
+function LogoMark() {
   return (
-    <>
-      {/* Top Nav */}
-      <header className="sticky top-0 z-50 bg-surface-dark border-b border-white/10">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-display font-black text-white">
-              Zero<span className="text-brand-green-500">Hunger</span>
-            </span>
-          </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navItems.map(({ href, label }) => {
-              const active =
-                href === "/" ? pathname === "/" : pathname.startsWith(href);
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
-                    active
-                      ? "bg-brand-green-500 text-white"
-                      : "text-white/60 hover:text-white hover:bg-white/10"
-                  }`}
-                >
-                  {label}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Right actions */}
-          <div className="flex items-center gap-2">
-            <button className="hidden md:flex items-center gap-1.5 text-white/60 hover:text-white text-sm font-medium transition-colors">
-              <span>📍</span>
-              <span>Ahmedabad</span>
-              <ChevronIcon />
-            </button>
-            <div className="w-8 h-8 rounded-full bg-brand-green-500 flex items-center justify-center text-white text-xs font-bold">
-              SR
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface-dark border-t border-white/10 pb-safe">
-        <div className="grid grid-cols-4 h-16">
-          {navItems.map(({ href, label, icon: Icon }) => {
-            const active =
-              href === "/" ? pathname === "/" : pathname.startsWith(href);
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`flex flex-col items-center justify-center gap-0.5 transition-colors ${
-                  active ? "text-brand-green-500" : "text-white/40"
-                }`}
-              >
-                <Icon size={active ? 22 : 20} />
-                <span className="text-[10px] font-semibold">{label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
-    </>
-  );
-}
-
-/**
- * Render a home-shaped SVG icon.
- * @param {number} [size=20] - Width and height of the icon in pixels.
- * @returns {JSX.Element} The SVG element representing a home icon.
- */
-function HomeIcon({ size = 20 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+    <svg
+      width="20" height="20" viewBox="0 0 24 24"
+      fill="none" stroke="white" strokeWidth="1.8"
+      strokeLinecap="round" strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 22s-8-7-8-12a8 8 0 0 1 16 0c0 5-8 12-8 12z" />
+      <path d="M12 8c0 0-3 2.5-3 5" />
+      <path d="M12 8c0 0 3 2.5 3 5" />
     </svg>
   );
 }
-/**
- * Renders a magnifying-glass (search) SVG icon.
- * @param {Object} props
- * @param {number} [props.size=20] - Icon width and height in pixels.
- * @returns {JSX.Element} The SVG element representing a search icon.
- */
-function SearchIcon({ size = 20 }) {
+
+function SearchIcon() {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-    >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.35-4.35" />
     </svg>
   );
 }
-/**
- * Renders a shopping bag SVG icon.
- * @param {Object} props
- * @param {number} [props.size=20] - Icon width and height in pixels.
- * @returns {JSX.Element} A bag-shaped SVG icon.
- */
-function BagIcon({ size = 20 }) {
+
+function MenuIcon() {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
       <line x1="3" y1="6" x2="21" y2="6" />
-      <path d="M16 10a4 4 0 0 1-8 0" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
     </svg>
   );
 }
-/**
- * Render a storefront SVG icon.
- *
- * @param {number} [size=20] - Icon width and height in pixels.
- * @returns {JSX.Element} The SVG element for a store/front storefront icon sized to the given `size`.
- */
-function StoreIcon({ size = 20 }) {
+
+function CloseIcon() {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
 }
-/**
- * Renders a downward chevron SVG icon.
- * @returns {JSX.Element} An SVG element representing a downwards-pointing chevron.
- */
-function ChevronIcon() {
+
+export function Navbar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const { data: user } = useMe();
+  const isAuthenticated = !!user;
+  const isRestaurant = user?.role === 'restaurant';
+
+  // Only start transparent on hero pages
+  const canBeTransparent = TRANSPARENT_ROUTES.includes(pathname);
+
+  const handleScroll = useCallback(() => {
+    setScrolled(window.scrollY > 60);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // run once on mount
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // Determine nav visual state
+  const isGlass = canBeTransparent && !scrolled && !mobileOpen;
+
+  const navStyle = isGlass
+    ? {
+        background: 'rgba(1, 61, 60, 0.15)',
+        backdropFilter: 'blur(14px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(14px) saturate(180%)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+      }
+    : {
+        background: '#01615f',
+        backdropFilter: 'none',
+        WebkitBackdropFilter: 'none',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.15)',
+      };
+
   return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-    >
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
+    <>
+      <header
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out"
+        style={navStyle}
+      >
+        <div className="max-w-7xl mx-auto px-5 h-[60px] flex items-center">
+
+          {/* ── LEFT NAV ─────────────────────────────────── */}
+          <nav className="hidden md:flex items-center gap-1 flex-1" aria-label="Primary navigation">
+            <Link
+              href="/discover"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-semibold text-white/85 hover:text-white hover:bg-white/10 transition-all"
+            >
+              <SearchIcon />
+              Food nearby
+            </Link>
+            <Link
+              href="/#how-it-works"
+              className="px-3 py-1.5 rounded-lg text-[13px] font-semibold text-white/85 hover:text-white hover:bg-white/10 transition-all"
+            >
+              About
+            </Link>
+            <Link
+              href="/discover"
+              className="px-3 py-1.5 rounded-lg text-[13px] font-semibold text-white/85 hover:text-white hover:bg-white/10 transition-all"
+            >
+              Discover
+            </Link>
+          </nav>
+
+          {/* ── CENTER LOGO ──────────────────────────────── */}
+          <Link
+            href="/"
+            className="flex items-center gap-2 flex-shrink-0 mx-auto md:mx-0"
+            aria-label="ZeroHunger home"
+          >
+            <div className="w-9 h-9 rounded-full border border-white/30 bg-white/10 flex items-center justify-center">
+              <LogoMark />
+            </div>
+            <span
+              className="text-[16px] font-black text-white tracking-tight hidden sm:block"
+              style={{ fontFamily: "'Bricolage Grotesque', system-ui, sans-serif" }}
+            >
+              Zero<span className="text-brand-orange-500">Hunger</span>
+            </span>
+          </Link>
+
+          {/* ── RIGHT NAV ────────────────────────────────── */}
+          <div className="hidden md:flex items-center gap-1 flex-1 justify-end">
+            {isAuthenticated ? (
+              <>
+                {isRestaurant ? (
+                  <Link
+                    href="/restaurant"
+                    className="px-3 py-1.5 rounded-lg text-[13px] font-semibold text-white/85 hover:text-white hover:bg-white/10 transition-all"
+                  >
+                    Dashboard
+                  </Link>
+                ) : (
+                  <Link
+                    href="/orders"
+                    className="px-3 py-1.5 rounded-lg text-[13px] font-semibold text-white/85 hover:text-white hover:bg-white/10 transition-all"
+                  >
+                    My orders
+                  </Link>
+                )}
+                <div className="w-px h-4 bg-white/25 mx-1" aria-hidden="true" />
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all"
+                >
+                  <div className="w-7 h-7 rounded-full bg-brand-orange-500 flex items-center justify-center text-white text-[11px] font-black uppercase">
+                    {user?.name?.[0] ?? 'U'}
+                  </div>
+                  <span className="text-[13px] font-semibold text-white/85 hover:text-white">
+                    {user?.name?.split(' ')[0]}
+                  </span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/restaurant/register"
+                  className="px-3 py-1.5 rounded-lg text-[13px] font-semibold text-white/85 hover:text-white hover:bg-white/10 transition-all whitespace-nowrap"
+                >
+                  Sign up as Business
+                </Link>
+                <div className="w-px h-4 bg-white/25 mx-1" aria-hidden="true" />
+                <Link
+                  href="/login"
+                  className="px-3 py-1.5 rounded-lg text-[13px] font-semibold text-white/85 hover:text-white hover:bg-white/10 transition-all"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/register"
+                  className="ml-1 px-4 py-2 rounded-full bg-white text-brand-green-500 text-[13px] font-black hover:opacity-90 transition-opacity whitespace-nowrap"
+                  style={{ color: '#01615f' }}
+                >
+                  Get started
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* ── MOBILE HAMBURGER ─────────────────────────── */}
+          <button
+            className="md:hidden ml-auto text-white p-1.5 rounded-lg hover:bg-white/10 transition-all"
+            onClick={() => setMobileOpen(prev => !prev)}
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileOpen}
+          >
+            {mobileOpen ? <CloseIcon /> : <MenuIcon />}
+          </button>
+
+        </div>
+      </header>
+
+      {/* ── MOBILE MENU ──────────────────────────────────── */}
+      <div
+        className={`md:hidden fixed top-[60px] left-0 right-0 z-40 transition-all duration-300 ease-in-out overflow-hidden ${
+          mobileOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+        }`}
+        style={{ background: '#01615f' }}
+        aria-hidden={!mobileOpen}
+      >
+        <nav className="flex flex-col px-5 pb-6 pt-2 gap-1">
+          <Link href="/discover" className="flex items-center gap-2 px-3 py-3 rounded-xl text-white/85 font-semibold text-sm hover:bg-white/10 transition-all">
+            <SearchIcon /> Food nearby
+          </Link>
+          <Link href="/#how-it-works" className="px-3 py-3 rounded-xl text-white/85 font-semibold text-sm hover:bg-white/10 transition-all">
+            About
+          </Link>
+          <Link href="/restaurant/register" className="px-3 py-3 rounded-xl text-white/85 font-semibold text-sm hover:bg-white/10 transition-all">
+            Business
+          </Link>
+
+          <div className="h-px bg-white/15 my-2" />
+
+          {isAuthenticated ? (
+            <Link
+              href="/dashboard"
+              className="px-3 py-3 rounded-xl text-white font-bold text-sm hover:bg-white/10 transition-all"
+            >
+              My account
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="px-3 py-3 rounded-xl text-white/85 font-semibold text-sm hover:bg-white/10 transition-all">
+                Sign in
+              </Link>
+              <Link
+                href="/register"
+                className="mt-1 px-4 py-3 rounded-full bg-brand-orange-500 text-white font-black text-sm text-center hover:opacity-90 transition-opacity"
+              >
+                Get started — it's free
+              </Link>
+            </>
+          )}
+        </nav>
+      </div>
+
+      {/* Backdrop — closes mobile menu on outside click */}
+      {mobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 z-30 bg-black/30"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Spacer — prevents content from hiding under fixed navbar */}
+      {!canBeTransparent && <div className="h-[60px]" aria-hidden="true" />}
+    </>
   );
 }

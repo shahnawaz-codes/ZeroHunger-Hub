@@ -5,27 +5,18 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Manrope", "system-ui", "sans-serif"],
-        display: ["Bricolage Grotesque", "system-ui", "sans-serif"],
+        sans: ["Manrope", "sans-serif"],
+        display: ["Bricolage Grotesque", "sans-serif"],
       },
       colors: {
         // Primary — brand green (navbar, logo, tags, badges)
         "brand-green": {
           50: "#f1f8e9",
           100: "#dcedc8",
-          200: "#c5e1a5",
-          500: "#4CAF50",
-          600: "#43A047",
-          700: "#388E3C",
-        },
-
-        // CTA — orange (buttons that trigger actions ONLY)
-        "brand-orange": {
-          50: "#fff3e0",
-          100: "#ffe0b2",
-          500: "#FF9800",
-          600: "#FB8C00",
-          700: "#F57C00",
+          200: "#048482",
+          500: "#01615f",
+          600: "#005250",
+          700: "#013d3c",
         },
 
         // Secondary / Neutral — text, borders, inactive states
