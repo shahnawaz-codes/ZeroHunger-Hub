@@ -48,7 +48,7 @@ const bagSchema = new mongoose.Schema(
         type: Number,
         // doing this we can make sure that the left quantity is always less than or equal to the total quantity (left<=total)
         default: function () {
-          return this.total;
+          return this.quantity.total;
         }, // default value as total
       },
     },
@@ -70,6 +70,7 @@ const bagSchema = new mongoose.Schema(
       default: "active",
     },
   },
+
   { timestamps: true },
 );
 

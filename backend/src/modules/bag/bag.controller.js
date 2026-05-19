@@ -49,7 +49,9 @@ const MybagsHandler = asyncHandler(async (req, res) => {
  * @access  Public
  */
 const allbagsHandler = asyncHandler(async (req, res) => {
-  const bags = await getAllbags();
+  const { lng, lat, radius } = req.query;
+  console.log(lng, lat, radius);
+  const bags = await getAllbags(lng, lat, radius);
   res.json({ success: true, data: bags });
 });
 
