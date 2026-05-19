@@ -7,9 +7,10 @@ const { myRestaurant, createRestaurant } = require("./restaurant.service");
  * @access  Private
  */
 const handleCreateRestaurant = asyncHandler(async (req, res) => {
-  const { name, address, cuisine } = req.body;
-  let payload = { name, address, cuisine };
-  const restaurant = await createRestaurant(payload, req.user?._id);
+  const { name, address, cuisine, coordinates } = req.body;
+
+  let payload = { name, address, cuisine, coordinates };
+  const restaurant = await createRestaurant(payload, req.user);
 
   res.status(201).json({ success: true, data: restaurant });
 });
